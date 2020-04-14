@@ -1,0 +1,15 @@
+Aplikasi sudah dapat :
+1. Login
+2. Logout
+3. Register User (API Only)
+4. Add User Role (API Only)
+5. Add data teknisi 
+6. Update data teknisi
+7. Delete data teknisi
+8. Pagination tabel (masih dalam pengembangan)
+
+*Catatan
+Untuk melakukan login, data user harus diregister terlebih dahulu. Untuk register user,
+tambahkan role baru terlebih dahulu menggunakan aplikasi Postman (disesuaikan dengan kolom tabel pada database.)
+
+Fitur lainnya dalam tahap pembuatan dan pengembangan.
