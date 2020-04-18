@@ -2275,11 +2275,181 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       modals: {
         modal_add_service: false,
+        modal_detail_service: false,
         name: '',
         address: '',
         phone: '',
@@ -2313,6 +2483,14 @@ __webpack_require__.r(__webpack_exports__);
       isBegin: true,
       isEnd: true,
       selected: "",
+      newSjob: '--- Pilih Jasa Baru ---',
+      newSpart: '--- Pilih Spare Part Baru ---',
+      tableSJobs: [],
+      tableSpart: [],
+      sjobDetailTotalCost: 0,
+      spartDetailTotalCost: 0,
+      showAlertAddSjob: false,
+      showAlertAddSpart: false,
       showAlertAdd: false,
       showAlertUpdate: false,
       showAlertDelete: false,
@@ -2384,32 +2562,125 @@ __webpack_require__.r(__webpack_exports__);
         _this6.scatData = response.data.data;
       });
     },
-    loadData: function loadData() {
+    loadServiceDetail: function loadServiceDetail(serviceId) {
       var _this7 = this;
+
+      this.axios.get("api/service/" + serviceId).then(function (response) {
+        var sId = document.getElementById("sId").innerHTML = response.data.data.service_id;
+        var custName = document.getElementById("custName").innerHTML = response.data.data.cust_name;
+        var vehicName = document.getElementById("vehicName").innerHTML = response.data.data.vehicle_name;
+        var vehicLic = document.getElementById("vehicLic").innerHTML = response.data.data.vehicle_license;
+        var kilometer = document.getElementById("kilometer").innerHTML = response.data.data.kilometer;
+        var techName = document.getElementById("techName").innerHTML = response.data.data.tech_name;
+        var serviceStartTime = document.getElementById("serviceStartTime").innerHTML = response.data.data.service_start_time;
+        var compDesc = document.getElementById("compDesc").innerHTML = response.data.data.complaint_desc;
+        var servDesc = document.getElementById("servDesc").innerHTML = response.data.data.service_desc;
+        var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name;
+        var totalCost = document.getElementById("totalCost").innerHTML = response.data.data.total_cost;
+
+        _this7.axios.get("api/servicesjob/" + serviceId).then(function (response) {
+          _this7.sjobDetailTotalCost = 0;
+          _this7.tableSJobs = response.data;
+
+          for (var i = 0; i < _this7.tableSJobs.length; i++) {
+            _this7.sjobDetailTotalCost += _this7.tableSJobs[i].price;
+          }
+        });
+
+        _this7.axios.get("api/servicespart/" + serviceId).then(function (response) {
+          _this7.spartDetailTotalCost = 0;
+          _this7.tableSpart = response.data;
+
+          for (var i = 0; i < _this7.tableSpart.length; i++) {
+            _this7.spartDetailTotalCost += _this7.tableSpart[i].price;
+          }
+        });
+
+        _this7.modals.modal_detail_service = true;
+      });
+    },
+    addNewSjob: function addNewSjob() {
+      var _this8 = this;
+
+      var servId = document.getElementById("sId").innerHTML;
+
+      if (this.newSjob == '--- Pilih Jasa Baru ---') {
+        return;
+      }
+
+      var sjobId = this.newSjob.replace(/ .*/, '');
+      this.axios.post("api/servicesjob", {
+        service_id: servId,
+        sjob: sjobId
+      }).then(function (response) {
+        _this8.sjobDetailTotalCost = 0;
+        _this8.newSjob = '--- Pilih Jasa Baru ---';
+
+        _this8.axios.get("api/servicesjob/" + servId).then(function (response) {
+          _this8.tableSJobs = response.data;
+
+          for (var i = 0; i < _this8.tableSJobs.length; i++) {
+            _this8.sjobDetailTotalCost += _this8.tableSJobs[i].price;
+          }
+
+          _this8.showAlertAddSjob = true;
+        });
+      });
+    },
+    addNewSpart: function addNewSpart() {
+      var _this9 = this;
+
+      var servId = document.getElementById("sId").innerHTML;
+
+      if (this.newSpart == '--- Pilih Spare Part Baru ---') {
+        return;
+      }
+
+      var spartId = this.newSpart.replace(/ .*/, '');
+      this.axios.post("api/servicespart", {
+        service_id: servId,
+        spart: spartId
+      }).then(function (response) {
+        _this9.spartDetailTotalCost = 0;
+        _this9.newSpart = '--- Pilih Spare Part Baru ---';
+
+        _this9.axios.get("api/servicespart/" + servId).then(function (response) {
+          _this9.tableSpart = response.data;
+
+          for (var i = 0; i < _this9.tableSpart.length; i++) {
+            _this9.spartDetailTotalCost += _this9.tableSpart[i].price;
+          }
+
+          _this9.showAlertAddSpart = true;
+        });
+      });
+    },
+    loadData: function loadData() {
+      var _this10 = this;
 
       var i = 0; //Get service data from database
 
       this.axios.get("api/service").then(function (response) {
         //Declare table data container
-        _this7.tableData = []; //Declare shown table data
+        _this10.tableData = []; //Declare shown table data
 
-        _this7.tableDataShow = []; //Declare shown data based on pagenumber
+        _this10.tableDataShow = []; //Declare shown data based on pagenumber
 
-        _this7.pageShow = []; //Data page number
+        _this10.pageShow = []; //Data page number
 
-        _this7.dataPage = 1; //Set pagenumBegin is true
+        _this10.dataPage = 1; //Set pagenumBegin is true
 
-        _this7.isBegin = true; //Get API response data
+        _this10.isBegin = true; //Get API response data
 
-        _this7.tableData = response.data;
-        console.log(_this7.tableData); //Get data length
+        _this10.tableData = response.data;
+        console.log(_this10.tableData); //Get data length
 
-        _this7.tableDataLength = _this7.tableData.length;
+        _this10.tableDataLength = _this10.tableData.length;
         var counter = 0;
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this7.tableDataLength - 1;
+        var i = _this10.tableDataLength - 1;
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -2418,20 +2689,20 @@ __webpack_require__.r(__webpack_exports__);
           } //IF total data index % data perpage == 0
 
 
-          if (i % _this7.perPage == 0) {
+          if (i % _this10.perPage == 0) {
             var obj = {
               pageNumber: num,
               startIndex: ind
             };
 
-            _this7.pageShow.push(obj);
+            _this10.pageShow.push(obj);
 
             num++;
-            ind = ind + _this7.perPage;
+            ind = ind + _this10.perPage;
             continue;
           } //koreksi
-          else if (i % _this7.perPage > 0) {
-              if (i < _this7.perPage) {
+          else if (i % _this10.perPage > 0) {
+              if (i < _this10.perPage) {
                 o++;
                 break;
               } //\koreksi
@@ -2447,46 +2718,46 @@ __webpack_require__.r(__webpack_exports__);
             startIndex: ind
           };
 
-          _this7.pageShow.push(obj);
+          _this10.pageShow.push(obj);
 
           num++;
-          ind = ind + _this7.perPage;
+          ind = ind + _this10.perPage;
         }
 
         var m = 1;
-        _this7.pageNumbers = [];
+        _this10.pageNumbers = [];
 
-        for (var l = 1; l <= _this7.pageShow.length; l++) {
+        for (var l = 1; l <= _this10.pageShow.length; l++) {
           var obj = {
             number: m
           };
 
-          _this7.pageNumbers.push(obj);
+          _this10.pageNumbers.push(obj);
 
           m++;
         }
 
-        i = _this7.pageShow.length;
+        i = _this10.pageShow.length;
         var k = 0;
 
-        _this7.tableDataShow.splice(0, _this7.perPage);
+        _this10.tableDataShow.splice(0, _this10.perPage);
 
         for (var j = 0; j < i; j++) {
-          if (_this7.dataPage == _this7.pageShow[j].pageNumber) {
-            for (k = _this7.pageShow[j].startIndex; k < _this7.perPage; k++) {
-              if (_this7.tableData[k] == null) {
+          if (_this10.dataPage == _this10.pageShow[j].pageNumber) {
+            for (k = _this10.pageShow[j].startIndex; k < _this10.perPage; k++) {
+              if (_this10.tableData[k] == null) {
                 break;
               }
 
-              _this7.tableDataShow.push(_this7.tableData[k]);
+              _this10.tableDataShow.push(_this10.tableData[k]);
             }
           }
         }
 
-        if (k == _this7.tableDataLength) {
-          _this7.isEnd = true;
+        if (k == _this10.tableDataLength) {
+          _this10.isEnd = true;
         } else {
-          _this7.isEnd = false;
+          _this10.isEnd = false;
         } // console.log(k)
         // console.log(this.tableDataLength)
 
@@ -2578,7 +2849,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     addData: function addData() {
-      var _this8 = this;
+      var _this11 = this;
 
       var custId = this.model.customer.replace(/ .*/, '');
       var techId = this.model.technician.replace(/ .*/, '');
@@ -2599,16 +2870,16 @@ __webpack_require__.r(__webpack_exports__);
         service_desc: this.model.service_desc
       }).then(function (response) {
         //close modal
-        _this8.modals.modal_add_service = false;
+        _this11.modals.modal_add_service = false;
 
-        _this8.loadData();
+        _this11.loadData();
 
-        _this8.model.customer = '--- Pilih Nama Pelanggan ---', _this8.model.technician = '--- Pilih Nama Teknisi ---', _this8.model.spart = '--- Pilih Spare Part ---', _this8.model.kilometer = '', _this8.model.vehicle_license = '', _this8.model.sjob = '--- Pilih Jasa Servis ---', _this8.model.vehicle_name = '', _this8.model.complaint_desc = '', _this8.model.scategory = '--- Pilih Kategori Servis ---', _this8.model.service_desc = '';
-        _this8.showAlertAdd = true;
+        _this11.model.customer = '--- Pilih Nama Pelanggan ---', _this11.model.technician = '--- Pilih Nama Teknisi ---', _this11.model.spart = '--- Pilih Spare Part ---', _this11.model.kilometer = '', _this11.model.vehicle_license = '', _this11.model.sjob = '--- Pilih Jasa Servis ---', _this11.model.vehicle_name = '', _this11.model.complaint_desc = '', _this11.model.scategory = '--- Pilih Kategori Servis ---', _this11.model.service_desc = '';
+        _this11.showAlertAdd = true;
       });
     },
     updatePost: function updatePost(index) {
-      var _this9 = this;
+      var _this12 = this;
 
       //Update data in database via API
       this.axios.post("/api/service/update", {
@@ -2617,7 +2888,7 @@ __webpack_require__.r(__webpack_exports__);
         phone: this.editPost3,
         service_id: this.updateId
       }).then(function (response) {
-        _this9.loadData();
+        _this12.loadData();
       });
       this.editOffset = -1;
       this.editOffset2 = -1;
@@ -9120,9 +9391,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  _vm.startEditing(row.name, row.service_id)
-                                  _vm.startEditing2(row.address)
-                                  _vm.startEditing3(row.phone)
+                                  return _vm.loadServiceDetail(row.service_id)
                                 }
                               }
                             },
@@ -9695,6 +9964,547 @@ var render = function() {
                   }
                 },
                 [_vm._v("Tambah Servis")]
+              )
+            ],
+            1
+          )
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "modalstd",
+        {
+          attrs: { show: _vm.modals.modal_detail_service },
+          on: {
+            "update:show": function($event) {
+              return _vm.$set(_vm.modals, "modal_detail_service", $event)
+            }
+          }
+        },
+        [
+          _c("template", { slot: "header" }, [
+            _c(
+              "h5",
+              {
+                staticClass: "modal-title",
+                attrs: { id: "modal_detail_service" }
+              },
+              [_vm._v("Detail Servis")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-3" }, [
+              _c("b", [_vm._v("Servis Id")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "sId" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Nama Pelanggan")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "custName" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Kendaraan")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "vehicName" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Plat Nomor")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "vehicLic" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Jumlah Kilometer")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "kilometer" } })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-3" }, [
+              _c("b", [_vm._v("Teknisi")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "techName" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Jam Mulai Servis")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "serviceStartTime" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Deskripsi Komplen")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "compDesc" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Deskripsi Tambahan")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "servDesc" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Kategori Servis")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "sCat" } }),
+              _vm._v(" "),
+              _c("b", [_vm._v("Total Biaya Servis")]),
+              _vm._v(" "),
+              _c("p", { attrs: { id: "totalCost" } })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-md-6" },
+              [
+                _c(
+                  "tabs",
+                  {
+                    staticClass: "flex-column flex-md-row mt-n3",
+                    attrs: { fill: "" }
+                  },
+                  [
+                    _c(
+                      "card",
+                      { attrs: { shadow: "" } },
+                      [
+                        _c("tab-pane", { attrs: { title: "Spare Part" } }, [
+                          _c(
+                            "span",
+                            { attrs: { slot: "title" }, slot: "title" },
+                            [
+                              _c("i", { staticClass: "ni ni-cloud-upload-96" }),
+                              _vm._v(
+                                "\n                                Spare Part\n                            "
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col-md-10" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.newSpart,
+                                      expression: "newSpart"
+                                    }
+                                  ],
+                                  staticClass: "form-control mb-2",
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.newSpart = $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("option", { attrs: { selected: "" } }, [
+                                    _vm._v("--- Pilih Spare Part Baru ---")
+                                  ]),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.spartData, function(spart) {
+                                    return _c("option", [
+                                      _vm._v(
+                                        "\n                                            " +
+                                          _vm._s(spart.spart_id) +
+                                          " | " +
+                                          _vm._s(spart.name) +
+                                          "\n                                        "
+                                      )
+                                    ])
+                                  })
+                                ],
+                                2
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-2" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-primary float-right mb-2",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.addNewSpart()
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-plus" })]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.showAlertAddSpart == true,
+                                  expression: "showAlertAddSpart==true"
+                                }
+                              ],
+                              staticClass:
+                                "alert alert-success alert-dismissible fade show",
+                              attrs: { role: "alert" }
+                            },
+                            [
+                              _c("span", { staticClass: "alert-inner--icon" }, [
+                                _c("i", { staticClass: "notification-70" })
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "alert-inner--text" }, [
+                                _vm._v("Spare Part baru berhasil ditambahkan")
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "close",
+                                  attrs: {
+                                    type: "button",
+                                    "aria-label": "Close"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.showAlertAddSpart = false
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    { attrs: { "aria-hidden": "true" } },
+                                    [_vm._v("×")]
+                                  )
+                                ]
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "table-responsive description" },
+                            [
+                              _c(
+                                "base-table",
+                                {
+                                  staticClass:
+                                    "table align-items-center table-flush",
+                                  class:
+                                    _vm.type === "dark" ? "table-dark" : "",
+                                  attrs: {
+                                    "thead-classes":
+                                      _vm.type === "dark"
+                                        ? "thead-dark"
+                                        : "thead-light",
+                                    "tbody-classes": "list",
+                                    data: _vm.tableSpart
+                                  },
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "default",
+                                      fn: function(ref) {
+                                        var row = ref.row
+                                        var index = ref.index
+                                        return [
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(index + 1) +
+                                                "\n                                        "
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(row.spart) +
+                                                "\n                                        "
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(row.price) +
+                                                "\n                                        "
+                                            )
+                                          ])
+                                        ]
+                                      }
+                                    }
+                                  ])
+                                },
+                                [
+                                  _c("template", { slot: "columns" }, [
+                                    _c("th", [_vm._v("No.")]),
+                                    _vm._v(" "),
+                                    _c("th", [_vm._v("Spare Part")]),
+                                    _vm._v(" "),
+                                    _c("th", [_vm._v("Harga")])
+                                  ])
+                                ],
+                                2
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "mt-3 text-center" }, [
+                            _c("strong", [
+                              _vm._v(
+                                "Total Biaya Spare Part : " +
+                                  _vm._s(_vm.spartDetailTotalCost)
+                              )
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("tab-pane", { attrs: { title: "Job Servis" } }, [
+                          _c(
+                            "span",
+                            { attrs: { slot: "title" }, slot: "title" },
+                            [
+                              _c("i", { staticClass: "ni ni-bell-55 mr-2" }),
+                              _vm._v(
+                                "\n                                Jasa Servis\n                            "
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col-md-10" }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.newSjob,
+                                      expression: "newSjob"
+                                    }
+                                  ],
+                                  staticClass: "form-control mb-2",
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.newSjob = $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("option", { attrs: { selected: "" } }, [
+                                    _vm._v("--- Pilih Jasa Baru ---")
+                                  ]),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.sjobData, function(sjob) {
+                                    return _c("option", [
+                                      _vm._v(
+                                        "\n                                            " +
+                                          _vm._s(sjob.sjob_id) +
+                                          " | " +
+                                          _vm._s(sjob.name) +
+                                          "\n                                        "
+                                      )
+                                    ])
+                                  })
+                                ],
+                                2
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-2" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-primary float-right mb-2",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.addNewSjob()
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-plus" })]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.showAlertAddSjob == true,
+                                  expression: "showAlertAddSjob==true"
+                                }
+                              ],
+                              staticClass:
+                                "alert alert-success alert-dismissible fade show",
+                              attrs: { role: "alert" }
+                            },
+                            [
+                              _c("span", { staticClass: "alert-inner--icon" }, [
+                                _c("i", { staticClass: "notification-70" })
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "alert-inner--text" }, [
+                                _vm._v("Jasa baru berhasil ditambahkan")
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "close",
+                                  attrs: {
+                                    type: "button",
+                                    "aria-label": "Close"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.showAlertAddSjob = false
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    { attrs: { "aria-hidden": "true" } },
+                                    [_vm._v("×")]
+                                  )
+                                ]
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "table-responsive description" },
+                            [
+                              _c(
+                                "base-table",
+                                {
+                                  staticClass:
+                                    "table align-items-center table-flush",
+                                  class:
+                                    _vm.type === "dark" ? "table-dark" : "",
+                                  attrs: {
+                                    "thead-classes":
+                                      _vm.type === "dark"
+                                        ? "thead-dark"
+                                        : "thead-light",
+                                    "tbody-classes": "list",
+                                    data: _vm.tableSJobs
+                                  },
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "default",
+                                      fn: function(ref) {
+                                        var row = ref.row
+                                        var index = ref.index
+                                        return [
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(index + 1) +
+                                                "\n                                        "
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(row.job) +
+                                                "\n                                        "
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(row.price) +
+                                                "\n                                        "
+                                            )
+                                          ])
+                                        ]
+                                      }
+                                    }
+                                  ])
+                                },
+                                [
+                                  _c("template", { slot: "columns" }, [
+                                    _c("th", [_vm._v("No.")]),
+                                    _vm._v(" "),
+                                    _c("th", [_vm._v("Job")]),
+                                    _vm._v(" "),
+                                    _c("th", [_vm._v("Harga")])
+                                  ])
+                                ],
+                                2
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "mt-3 text-center" }, [
+                            _c("strong", [
+                              _vm._v(
+                                "Total Biaya Jasa Servis : " +
+                                  _vm._s(_vm.sjobDetailTotalCost)
+                              )
+                            ])
+                          ])
+                        ])
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "template",
+            { slot: "footer" },
+            [
+              _c(
+                "base-button",
+                {
+                  attrs: { type: "secondary" },
+                  on: {
+                    click: function($event) {
+                      _vm.modals.modal_detail_service = false
+                    }
+                  }
+                },
+                [_vm._v("Tutup")]
               )
             ],
             1

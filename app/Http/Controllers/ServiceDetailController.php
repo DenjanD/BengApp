@@ -8,6 +8,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceSjobController;
 use App\Http\Controllers\ServiceSpartController;
 use App\Service_category;
+use Illuminate\Support\Facades\DB;
 
 class ServiceDetailController extends Controller
 {
@@ -23,7 +24,15 @@ class ServiceDetailController extends Controller
     }
 
     public function read($id){
-        $data = Service_detail::where('id', $id)->first();
+        // $data = Service_detail::where('id', $id)->first();
+        $data = DB::table('services')
+        ->select('service_id','customers.name AS cust_name','vehicle_name','vehicle_license','kilometer','technicians.name AS tech_name','service_start_time','complaint_desc','service_desc','service_categories.name AS scat_name','total_cost')
+        ->join('customers','customer','=','customer_id')
+        ->join('service_details','service_id','=','id')
+        ->join('technicians','technician','=','technician_id')
+        ->join('service_categories','scategory','=','scategory_id')
+        ->where('service_id',$id)
+        ->first();
 
         return response()->json(['data' => $data], 200);
     }

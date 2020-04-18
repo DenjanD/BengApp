@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ServiceSjob;
 use App\Service_job;
+use Illuminate\Support\Facades\DB;
 
 class ServiceSjobController extends Controller
 {
@@ -13,6 +14,16 @@ class ServiceSjobController extends Controller
         $data = ServiceJob::all();
 
         return response()->json(['sjob' => $data]);
+    }
+
+    public function readservicejob($id){
+        $data = DB::table("service_sjobs")
+        ->select('name AS job','price')
+        ->join('service_jobs','sjob','=','sjob_id')
+        ->where('service_id',$id)
+        ->get();
+
+        return response()->json($data, 200);
     }
 
     public function add(Request $request, $serviceId){

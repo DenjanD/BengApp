@@ -74,8 +74,7 @@
                         <badge class="badge badge-lg">{{ row.status }}</badge>
                     </td>
                     <td>
-                        <base-button type="info" size="sm"
-                            @click.prevent="startEditing(row.name,row.service_id); startEditing2(row.address); startEditing3(row.phone)">
+                        <base-button type="info" size="sm" @click.prevent="loadServiceDetail(row.service_id)">
                             <i class="fa fa-bars"></i> Rincian
                         </base-button>
                         <base-button type="success" size="sm"
@@ -187,6 +186,176 @@
             </template>
         </modalstd>
 
+        <!-- Modal Detail Servis -->
+        <modalstd :show.sync="modals.modal_detail_service">
+            <template slot="header">
+                <h5 class="modal-title" id="modal_detail_service">Detail Servis</h5>
+            </template>
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Servis Id</b>
+                    <p id="sId"></p>
+
+                    <b>Nama Pelanggan</b>
+                    <p id="custName"></p>
+
+                    <b>Kendaraan</b>
+                    <p id="vehicName"></p>
+
+                    <b>Plat Nomor</b>
+                    <p id="vehicLic"></p>
+
+                    <b>Jumlah Kilometer</b>
+                    <p id="kilometer"></p>
+                </div>
+                <div class="col-md-3">
+                    <b>Teknisi</b>
+                    <p id="techName"></p>
+
+                    <b>Jam Mulai Servis</b>
+                    <p id="serviceStartTime"></p>
+
+                    <b>Deskripsi Komplen</b>
+                    <p id="compDesc"></p>
+
+                    <b>Deskripsi Tambahan</b>
+                    <p id="servDesc"></p>
+
+                    <b>Kategori Servis</b>
+                    <p id="sCat"></p>
+
+                    <b>Total Biaya Servis</b>
+                    <p id="totalCost"></p>
+                </div>
+                <div class="col-md-6">
+                    <tabs fill class="flex-column flex-md-row mt-n3">
+                        <card shadow>
+                            <tab-pane title="Spare Part">
+                                <span slot="title">
+                                    <i class="ni ni-cloud-upload-96"></i>
+                                    Spare Part
+                                </span>
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <select class="form-control mb-2" v-model="newSpart">
+                                            <option selected>--- Pilih Spare Part Baru ---</option>
+                                            <option v-for="spart in spartData">
+                                                {{ spart.spart_id }} | {{ spart.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button v-on:click="addNewSpart()" class="btn btn-primary float-right mb-2"><i
+                                                class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- Alert after add table data -->
+                                <div v-show="showAlertAddSpart==true"
+                                    class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="alert-inner--icon"><i class="notification-70"></i></span>
+                                    <span class="alert-inner--text">Spare Part baru berhasil ditambahkan</span>
+                                    <button type="button" @click="showAlertAddSpart = false" class="close"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="table-responsive description">
+                                    <base-table class="table align-items-center table-flush"
+                                        :class="type === 'dark' ? 'table-dark': ''"
+                                        :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'"
+                                        tbody-classes="list" :data="tableSpart">
+                                        <template slot="columns">
+                                            <th>No.</th>
+                                            <th>Spare Part</th>
+                                            <th>Harga</th>
+                                        </template>
+
+                                        <template slot-scope="{row,index}">
+                                            <td>
+                                                {{ index+1 }}
+                                            </td>
+                                            <td>
+                                                {{ row.spart }}
+                                            </td>
+                                            <td>
+                                                {{ row.price }}
+                                            </td>
+                                        </template>
+                                    </base-table>
+                                </div>
+                                <div class="mt-3 text-center">
+                                    <strong>Total Biaya Spare Part : {{ spartDetailTotalCost }}</strong>
+                                </div>
+                            </tab-pane>
+
+                            <tab-pane title="Job Servis">
+                                <span slot="title">
+                                    <i class="ni ni-bell-55 mr-2"></i>
+                                    Jasa Servis
+                                </span>
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <select class="form-control mb-2" v-model="newSjob">
+                                            <option selected>--- Pilih Jasa Baru ---</option>
+                                            <option v-for="sjob in sjobData">
+                                                {{ sjob.sjob_id }} | {{ sjob.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button v-on:click="addNewSjob()" class="btn btn-primary float-right mb-2"><i
+                                                class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <!-- Alert after add table data -->
+                                <div v-show="showAlertAddSjob==true"
+                                    class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="alert-inner--icon"><i class="notification-70"></i></span>
+                                    <span class="alert-inner--text">Jasa baru berhasil ditambahkan</span>
+                                    <button type="button" @click="showAlertAddSjob = false" class="close"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="table-responsive description">
+                                    <base-table class="table align-items-center table-flush"
+                                        :class="type === 'dark' ? 'table-dark': ''"
+                                        :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'"
+                                        tbody-classes="list" :data="tableSJobs">
+                                        <template slot="columns">
+                                            <th>No.</th>
+                                            <th>Job</th>
+                                            <th>Harga</th>
+                                        </template>
+
+                                        <template slot-scope="{row,index}">
+                                            <td>
+                                                {{ index+1 }}
+                                            </td>
+                                            <td>
+                                                {{ row.job }}
+                                            </td>
+                                            <td>
+                                                {{ row.price }}
+                                            </td>
+                                        </template>
+                                    </base-table>
+                                </div>
+                                <div class="mt-3 text-center">
+                                    <strong>Total Biaya Jasa Servis : {{ sjobDetailTotalCost }}</strong>
+                                </div>
+                            </tab-pane>
+                        </card>
+                    </tabs>
+                </div>
+            </div>
+            <template slot="footer">
+                <base-button type="secondary" @click="modals.modal_detail_service = false">Tutup</base-button>
+            </template>
+        </modalstd>
+
         <modal :show.sync="modals.modal_delete_service">
             <template slot="header">
                 <h5 class="modal-title" id="modal_delete_service">Hapus Data Servis</h5>
@@ -206,7 +375,7 @@
     export default {
         data() {
             return {
-                modals: { modal_add_service: false, name: '', address: '', phone: '', modal_delete_service: false },
+                modals: { modal_add_service: false, modal_detail_service: false, name: '', address: '', phone: '', modal_delete_service: false },
                 model: {
                     customer: '--- Pilih Nama Pelanggan ---',
                     technician: '--- Pilih Nama Teknisi ---',
@@ -237,6 +406,16 @@
                 isEnd: true,
                 selected: "",
 
+                newSjob: '--- Pilih Jasa Baru ---',
+                newSpart: '--- Pilih Spare Part Baru ---',
+
+                tableSJobs: [],
+                tableSpart: [],
+                sjobDetailTotalCost: 0,
+                spartDetailTotalCost: 0,
+                showAlertAddSjob: false,
+                showAlertAddSpart: false,
+
                 showAlertAdd: false,
                 showAlertUpdate: false,
                 showAlertDelete: false,
@@ -262,7 +441,7 @@
         },
         methods: {
             getAuthUser() {
-                this.axios.get('api/user', {headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }}).then(response => {
+                this.axios.get('api/user', { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } }).then(response => {
                     this.model.teller = response.data.user.user_id
                     console.log(this.model.teller)
                 })
@@ -295,6 +474,89 @@
             loadScategory() {
                 this.axios.get("api/scat").then(response => {
                     this.scatData = response.data.data
+                })
+            },
+
+            loadServiceDetail(serviceId) {
+                this.axios.get("api/service/" + serviceId).then(response => {
+                    var sId = document.getElementById("sId").innerHTML = response.data.data.service_id
+                    var custName = document.getElementById("custName").innerHTML = response.data.data.cust_name
+                    var vehicName = document.getElementById("vehicName").innerHTML = response.data.data.vehicle_name
+                    var vehicLic = document.getElementById("vehicLic").innerHTML = response.data.data.vehicle_license
+                    var kilometer = document.getElementById("kilometer").innerHTML = response.data.data.kilometer
+                    var techName = document.getElementById("techName").innerHTML = response.data.data.tech_name
+                    var serviceStartTime = document.getElementById("serviceStartTime").innerHTML = response.data.data.service_start_time
+                    var compDesc = document.getElementById("compDesc").innerHTML = response.data.data.complaint_desc
+                    var servDesc = document.getElementById("servDesc").innerHTML = response.data.data.service_desc
+                    var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name
+                    var totalCost = document.getElementById("totalCost").innerHTML = response.data.data.total_cost
+
+                    this.axios.get("api/servicesjob/" + serviceId).then(response => {
+                        this.sjobDetailTotalCost = 0
+                        this.tableSJobs = response.data
+                        for (var i = 0; i < this.tableSJobs.length; i++) {
+                            this.sjobDetailTotalCost += this.tableSJobs[i].price
+                        }
+
+                    })
+
+                    this.axios.get("api/servicespart/" + serviceId).then(response => {
+                        this.spartDetailTotalCost = 0
+                        this.tableSpart = response.data
+                        for (var i = 0; i < this.tableSpart.length; i++) {
+                            this.spartDetailTotalCost += this.tableSpart[i].price
+                        }
+                        
+                    })
+                    this.modals.modal_detail_service = true
+                })
+            },
+
+            addNewSjob() {
+                var servId = document.getElementById("sId").innerHTML
+
+                if (this.newSjob == '--- Pilih Jasa Baru ---') {
+                    return
+                }
+                var sjobId = this.newSjob.replace(/ .*/, '')
+                this.axios.post("api/servicesjob", {
+                    service_id: servId,
+                    sjob: sjobId
+                }).then(response => {
+                    this.sjobDetailTotalCost = 0
+                    this.newSjob = '--- Pilih Jasa Baru ---'
+                    this.axios.get("api/servicesjob/" + servId).then(response => {
+                        this.tableSJobs = response.data
+                        for (var i = 0; i < this.tableSJobs.length; i++) {
+                            this.sjobDetailTotalCost += this.tableSJobs[i].price
+                        }
+                        this.showAlertAddSjob = true
+
+                    })
+                })
+            },
+
+            addNewSpart() {
+                var servId = document.getElementById("sId").innerHTML
+
+                if (this.newSpart == '--- Pilih Spare Part Baru ---') {
+                    return
+                }
+                var spartId = this.newSpart.replace(/ .*/, '')
+                this.axios.post("api/servicespart", {
+                    service_id: servId,
+                    spart: spartId
+                }).then(response => {
+                    this.spartDetailTotalCost = 0
+                    this.newSpart = '--- Pilih Spare Part Baru ---'
+                    this.axios.get("api/servicespart/" + servId).then(response => {
+                        this.tableSpart = response.data
+                        for (var i = 0; i < this.tableSpart.length; i++) {
+                            this.spartDetailTotalCost += this.tableSpart[i].price
+                        }
+                        this.showAlertAddSpart = true
+
+                    })
                 })
             },
 

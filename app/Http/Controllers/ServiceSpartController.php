@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ServiceSpart;
 use App\Spare_parts;
+use Illuminate\Support\Facades\DB;
 
 class ServiceSpartController extends Controller
 {
@@ -13,6 +14,16 @@ class ServiceSpartController extends Controller
         $data = ServiceSpart::all();
 
         return response()->json(['sspart' => $data]);
+    }
+
+    public function readservicespart($id){
+        $data = DB::table('spare_parts')
+        ->select('name AS spart','price')
+        ->join('service_sparts','spart','=','spart_id')
+        ->where('service_id',$id)
+        ->get();
+
+        return response()->json($data,200);
     }
 
     public function add(Request $request, $serviceId){

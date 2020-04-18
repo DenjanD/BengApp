@@ -63,6 +63,8 @@ Route::delete('scat/{id}', 'ServiceCategoryController@delete');
 //Service APIs
 Route::get('service', 'ServiceController@read');
 Route::get('service/{id}', 'ServiceDetailController@read');
+Route::get('servicesjob/{id}', 'ServiceSjobController@readservicejob');
+Route::get('servicespart/{id}', 'ServiceSpartController@readservicespart');
 Route::post('service', 'ServiceDetailController@add');
 Route::post('service/finish', 'ServiceDetailController@finish');
 Route::post('servicespart', 'ServiceDetailController@upSpart');
