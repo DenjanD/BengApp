@@ -29,6 +29,7 @@ class PurchasesController extends Controller
             'buyPrice' => 'required|digits_between:1,11'
         ]);
 
+        date_default_timezone_set('Asia/Jakarta');
         $purchaseDate = date('Y-m-d');
 
         $purchase = new Purchase([

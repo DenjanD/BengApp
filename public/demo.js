@@ -2444,6 +2444,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2453,7 +2483,7 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         address: '',
         phone: '',
-        modal_delete_service: false
+        modal_finish_service: false
       },
       model: {
         customer: '--- Pilih Nama Pelanggan ---',
@@ -2476,7 +2506,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 10,
+      perPage: 5,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -2491,6 +2521,9 @@ __webpack_require__.r(__webpack_exports__);
       spartDetailTotalCost: 0,
       showAlertAddSjob: false,
       showAlertAddSpart: false,
+      finishSJobs: [],
+      finishSpart: [],
+      finishTotalCost: 0,
       showAlertAdd: false,
       showAlertUpdate: false,
       showAlertDelete: false,
@@ -2562,10 +2595,22 @@ __webpack_require__.r(__webpack_exports__);
         _this6.scatData = response.data.data;
       });
     },
-    loadServiceDetail: function loadServiceDetail(serviceId) {
+    loadServiceDetail: function loadServiceDetail(serviceId, servStatus) {
       var _this7 = this;
 
       this.axios.get("api/service/" + serviceId).then(function (response) {
+        if (servStatus == 'Done') {
+          document.getElementById("selNewSpart").style.display = "none";
+          document.getElementById("selNewSjob").style.display = "none";
+          document.getElementById("buttAddNewSpart").style.display = "none";
+          document.getElementById("buttAddNewSjob").style.display = "none";
+        } else {
+          document.getElementById("selNewSpart").style.display = "block";
+          document.getElementById("selNewSjob").style.display = "block";
+          document.getElementById("buttAddNewSpart").style.display = "block";
+          document.getElementById("buttAddNewSjob").style.display = "block";
+        }
+
         var sId = document.getElementById("sId").innerHTML = response.data.data.service_id;
         var custName = document.getElementById("custName").innerHTML = response.data.data.cust_name;
         var vehicName = document.getElementById("vehicName").innerHTML = response.data.data.vehicle_name;
@@ -2575,7 +2620,7 @@ __webpack_require__.r(__webpack_exports__);
         var serviceStartTime = document.getElementById("serviceStartTime").innerHTML = response.data.data.service_start_time;
         var compDesc = document.getElementById("compDesc").innerHTML = response.data.data.complaint_desc;
         var servDesc = document.getElementById("servDesc").innerHTML = response.data.data.service_desc;
-        var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name;
+        var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price;
         var totalCost = document.getElementById("totalCost").innerHTML = response.data.data.total_cost;
 
         _this7.axios.get("api/servicesjob/" + serviceId).then(function (response) {
@@ -2599,8 +2644,59 @@ __webpack_require__.r(__webpack_exports__);
         _this7.modals.modal_detail_service = true;
       });
     },
-    addNewSjob: function addNewSjob() {
+    loadFinishService: function loadFinishService(serviceId) {
       var _this8 = this;
+
+      this.finishTotalCost = 0;
+      this.axios.get("api/service/" + serviceId).then(function (response) {
+        var serId = document.getElementById("serId").innerHTML = serviceId;
+        var custNameF = document.getElementById("custNameF").innerHTML = response.data.data.cust_name;
+        var vehicNameF = document.getElementById("vehicNameF").innerHTML = response.data.data.vehicle_name;
+        var vehicLicF = document.getElementById("vehicLicF").innerHTML = response.data.data.vehicle_license;
+        var techNameF = document.getElementById("techNameF").innerHTML = response.data.data.tech_name;
+        var sCatF = document.getElementById("sCatF").innerHTML = response.data.data.scat_name + " - Rp " + response.data.data.scat_price;
+
+        _this8.axios.get("api/servicesjob/" + serviceId).then(function (response) {
+          _this8.sjobDetailTotalCost = 0;
+          _this8.finishSJobs = response.data;
+
+          for (var i = 0; i < _this8.finishSJobs.length; i++) {
+            _this8.sjobDetailTotalCost += _this8.finishSJobs[i].price;
+          }
+
+          _this8.finishTotalCost += _this8.sjobDetailTotalCost;
+        });
+
+        _this8.axios.get("api/servicespart/" + serviceId).then(function (response) {
+          _this8.spartDetailTotalCost = 0;
+          _this8.finishSpart = response.data;
+
+          for (var i = 0; i < _this8.finishSpart.length; i++) {
+            _this8.spartDetailTotalCost += _this8.finishSpart[i].price;
+          }
+
+          _this8.finishTotalCost += _this8.spartDetailTotalCost;
+        });
+
+        _this8.finishTotalCost += response.data.data.scat_price;
+        _this8.modals.modal_finish_service = true;
+      });
+    },
+    finishService: function finishService() {
+      var _this9 = this;
+
+      var servId = document.getElementById("serId").innerHTML;
+      this.axios.post("api/service/finish", {
+        service_id: servId
+      }).then(function (response) {
+        _this9.loadData();
+
+        _this9.showAlertUpdate = true;
+        _this9.modals.modal_finish_service = false;
+      });
+    },
+    addNewSjob: function addNewSjob() {
+      var _this10 = this;
 
       var servId = document.getElementById("sId").innerHTML;
 
@@ -2613,22 +2709,22 @@ __webpack_require__.r(__webpack_exports__);
         service_id: servId,
         sjob: sjobId
       }).then(function (response) {
-        _this8.sjobDetailTotalCost = 0;
-        _this8.newSjob = '--- Pilih Jasa Baru ---';
+        _this10.sjobDetailTotalCost = 0;
+        _this10.newSjob = '--- Pilih Jasa Baru ---';
 
-        _this8.axios.get("api/servicesjob/" + servId).then(function (response) {
-          _this8.tableSJobs = response.data;
+        _this10.axios.get("api/servicesjob/" + servId).then(function (response) {
+          _this10.tableSJobs = response.data;
 
-          for (var i = 0; i < _this8.tableSJobs.length; i++) {
-            _this8.sjobDetailTotalCost += _this8.tableSJobs[i].price;
+          for (var i = 0; i < _this10.tableSJobs.length; i++) {
+            _this10.sjobDetailTotalCost += _this10.tableSJobs[i].price;
           }
 
-          _this8.showAlertAddSjob = true;
+          _this10.showAlertAddSjob = true;
         });
       });
     },
     addNewSpart: function addNewSpart() {
-      var _this9 = this;
+      var _this11 = this;
 
       var servId = document.getElementById("sId").innerHTML;
 
@@ -2641,46 +2737,46 @@ __webpack_require__.r(__webpack_exports__);
         service_id: servId,
         spart: spartId
       }).then(function (response) {
-        _this9.spartDetailTotalCost = 0;
-        _this9.newSpart = '--- Pilih Spare Part Baru ---';
+        _this11.spartDetailTotalCost = 0;
+        _this11.newSpart = '--- Pilih Spare Part Baru ---';
 
-        _this9.axios.get("api/servicespart/" + servId).then(function (response) {
-          _this9.tableSpart = response.data;
+        _this11.axios.get("api/servicespart/" + servId).then(function (response) {
+          _this11.tableSpart = response.data;
 
-          for (var i = 0; i < _this9.tableSpart.length; i++) {
-            _this9.spartDetailTotalCost += _this9.tableSpart[i].price;
+          for (var i = 0; i < _this11.tableSpart.length; i++) {
+            _this11.spartDetailTotalCost += _this11.tableSpart[i].price;
           }
 
-          _this9.showAlertAddSpart = true;
+          _this11.showAlertAddSpart = true;
         });
       });
     },
     loadData: function loadData() {
-      var _this10 = this;
+      var _this12 = this;
 
       var i = 0; //Get service data from database
 
       this.axios.get("api/service").then(function (response) {
         //Declare table data container
-        _this10.tableData = []; //Declare shown table data
+        _this12.tableData = []; //Declare shown table data
 
-        _this10.tableDataShow = []; //Declare shown data based on pagenumber
+        _this12.tableDataShow = []; //Declare shown data based on pagenumber
 
-        _this10.pageShow = []; //Data page number
+        _this12.pageShow = []; //Data page number
 
-        _this10.dataPage = 1; //Set pagenumBegin is true
+        _this12.dataPage = 1; //Set pagenumBegin is true
 
-        _this10.isBegin = true; //Get API response data
+        _this12.isBegin = true; //Get API response data
 
-        _this10.tableData = response.data;
-        console.log(_this10.tableData); //Get data length
+        _this12.tableData = response.data;
+        console.log(_this12.tableData); //Get data length
 
-        _this10.tableDataLength = _this10.tableData.length;
+        _this12.tableDataLength = _this12.tableData.length;
         var counter = 0;
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this10.tableDataLength - 1;
+        var i = _this12.tableDataLength - 1;
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -2689,20 +2785,20 @@ __webpack_require__.r(__webpack_exports__);
           } //IF total data index % data perpage == 0
 
 
-          if (i % _this10.perPage == 0) {
+          if (i % _this12.perPage == 0) {
             var obj = {
               pageNumber: num,
               startIndex: ind
             };
 
-            _this10.pageShow.push(obj);
+            _this12.pageShow.push(obj);
 
             num++;
-            ind = ind + _this10.perPage;
+            ind = ind + _this12.perPage;
             continue;
           } //koreksi
-          else if (i % _this10.perPage > 0) {
-              if (i < _this10.perPage) {
+          else if (i % _this12.perPage > 0) {
+              if (i < _this12.perPage) {
                 o++;
                 break;
               } //\koreksi
@@ -2718,46 +2814,46 @@ __webpack_require__.r(__webpack_exports__);
             startIndex: ind
           };
 
-          _this10.pageShow.push(obj);
+          _this12.pageShow.push(obj);
 
           num++;
-          ind = ind + _this10.perPage;
+          ind = ind + _this12.perPage;
         }
 
         var m = 1;
-        _this10.pageNumbers = [];
+        _this12.pageNumbers = [];
 
-        for (var l = 1; l <= _this10.pageShow.length; l++) {
+        for (var l = 1; l <= _this12.pageShow.length; l++) {
           var obj = {
             number: m
           };
 
-          _this10.pageNumbers.push(obj);
+          _this12.pageNumbers.push(obj);
 
           m++;
         }
 
-        i = _this10.pageShow.length;
+        i = _this12.pageShow.length;
         var k = 0;
 
-        _this10.tableDataShow.splice(0, _this10.perPage);
+        _this12.tableDataShow.splice(0, _this12.perPage);
 
         for (var j = 0; j < i; j++) {
-          if (_this10.dataPage == _this10.pageShow[j].pageNumber) {
-            for (k = _this10.pageShow[j].startIndex; k < _this10.perPage; k++) {
-              if (_this10.tableData[k] == null) {
+          if (_this12.dataPage == _this12.pageShow[j].pageNumber) {
+            for (k = _this12.pageShow[j].startIndex; k < _this12.perPage; k++) {
+              if (_this12.tableData[k] == null) {
                 break;
               }
 
-              _this10.tableDataShow.push(_this10.tableData[k]);
+              _this12.tableDataShow.push(_this12.tableData[k]);
             }
           }
         }
 
-        if (k == _this10.tableDataLength) {
-          _this10.isEnd = true;
+        if (k == _this12.tableDataLength) {
+          _this12.isEnd = true;
         } else {
-          _this10.isEnd = false;
+          _this12.isEnd = false;
         } // console.log(k)
         // console.log(this.tableDataLength)
 
@@ -2849,7 +2945,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     addData: function addData() {
-      var _this11 = this;
+      var _this13 = this;
 
       var custId = this.model.customer.replace(/ .*/, '');
       var techId = this.model.technician.replace(/ .*/, '');
@@ -2870,16 +2966,16 @@ __webpack_require__.r(__webpack_exports__);
         service_desc: this.model.service_desc
       }).then(function (response) {
         //close modal
-        _this11.modals.modal_add_service = false;
+        _this13.modals.modal_add_service = false;
 
-        _this11.loadData();
+        _this13.loadData();
 
-        _this11.model.customer = '--- Pilih Nama Pelanggan ---', _this11.model.technician = '--- Pilih Nama Teknisi ---', _this11.model.spart = '--- Pilih Spare Part ---', _this11.model.kilometer = '', _this11.model.vehicle_license = '', _this11.model.sjob = '--- Pilih Jasa Servis ---', _this11.model.vehicle_name = '', _this11.model.complaint_desc = '', _this11.model.scategory = '--- Pilih Kategori Servis ---', _this11.model.service_desc = '';
-        _this11.showAlertAdd = true;
+        _this13.model.customer = '--- Pilih Nama Pelanggan ---', _this13.model.technician = '--- Pilih Nama Teknisi ---', _this13.model.spart = '--- Pilih Spare Part ---', _this13.model.kilometer = '', _this13.model.vehicle_license = '', _this13.model.sjob = '--- Pilih Jasa Servis ---', _this13.model.vehicle_name = '', _this13.model.complaint_desc = '', _this13.model.scategory = '--- Pilih Kategori Servis ---', _this13.model.service_desc = '';
+        _this13.showAlertAdd = true;
       });
     },
     updatePost: function updatePost(index) {
-      var _this12 = this;
+      var _this14 = this;
 
       //Update data in database via API
       this.axios.post("/api/service/update", {
@@ -2888,7 +2984,7 @@ __webpack_require__.r(__webpack_exports__);
         phone: this.editPost3,
         service_id: this.updateId
       }).then(function (response) {
-        _this12.loadData();
+        _this14.loadData();
       });
       this.editOffset = -1;
       this.editOffset2 = -1;
@@ -4419,6 +4515,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -7111,233 +7208,194 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "col-xl-8 order-xl-1" }, [
-            _c(
-              "div",
-              {
-                staticClass: "card shadow",
-                class: _vm.type === "dark" ? "bg-default" : ""
-              },
-              [
-                _c(
-                  "div",
-                  {
-                    staticClass: "card-header border-0",
-                    class: _vm.type === "dark" ? "bg-transparent" : ""
-                  },
-                  [
-                    _c("div", { staticClass: "row align-items-center" }, [
-                      _c("div", { staticClass: "col-6" }, [
-                        _c(
-                          "h3",
-                          {
-                            staticClass: "mb-0",
-                            class: _vm.type === "dark" ? "text-white" : ""
-                          },
-                          [
-                            _vm._v(
-                              "\n                  Keranjang Belanja\n                "
-                            )
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-6 text-right" },
-                        [
-                          _vm.tableData.length != 0
-                            ? _c(
-                                "base-button",
-                                {
-                                  attrs: { type: "primary", size: "sm" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.saveSale()
-                                    }
-                                  }
-                                },
-                                [_vm._v("Simpan Penjualan")]
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-12 mt-4" }, [
-                        _c(
-                          "div",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: _vm.showAlertAdd == true,
-                                expression: "showAlertAdd==true"
-                              }
-                            ],
-                            staticClass:
-                              "alert alert-success alert-dismissible fade show",
-                            attrs: { role: "alert" }
-                          },
-                          [
-                            _vm._m(1),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "alert-inner--text" }, [
-                              _vm._v("Data penjualan telah berhasil disimpan")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "close",
-                                attrs: {
-                                  type: "button",
-                                  "aria-label": "Close"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    _vm.showAlertAdd = false
-                                  }
-                                }
-                              },
-                              [
-                                _c(
-                                  "span",
-                                  { attrs: { "aria-hidden": "true" } },
-                                  [_vm._v("×")]
-                                )
-                              ]
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("label", { staticClass: "form-label" }, [
-                          _vm._v("Total Tagihan :")
-                        ]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
+            _c("div", { staticClass: "card shadow" }, [
+              _c("div", { staticClass: "card-header border-0" }, [
+                _c("div", { staticClass: "row align-items-center" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-6 text-right" },
+                    [
+                      _vm.tableData.length != 0
+                        ? _c(
+                            "base-button",
                             {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.saleTotal,
-                              expression: "saleTotal"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: { type: "number", disabled: "" },
-                          domProps: { value: _vm.saleTotal },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                              attrs: { type: "primary", size: "sm" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.saveSale()
+                                }
                               }
-                              _vm.saleTotal = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "table-responsive" },
-                  [
+                            },
+                            [_vm._v("Simpan Penjualan")]
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-12 mt-4" }, [
                     _c(
-                      "base-table",
+                      "div",
                       {
-                        staticClass: "table align-items-center table-flush",
-                        class: _vm.type === "dark" ? "table-dark" : "",
-                        attrs: {
-                          "thead-classes":
-                            _vm.type === "dark" ? "thead-dark" : "thead-light",
-                          "tbody-classes": "list",
-                          data: _vm.tableData
-                        },
-                        scopedSlots: _vm._u([
+                        directives: [
                           {
-                            key: "default",
-                            fn: function(ref) {
-                              var row = ref.row
-                              return [
-                                _c("td", { attrs: { scope: "row" } }, [
-                                  _vm._v(
-                                    "\n                  " +
-                                      _vm._s(row.no) +
-                                      "\n                "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", [
-                                  _vm._v(
-                                    "\n                  " +
-                                      _vm._s(row.spartName) +
-                                      "\n                "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", [
-                                  _vm._v(
-                                    "\n                  " +
-                                      _vm._s(row.spartPrice) +
-                                      "\n                "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", [
-                                  _vm._v(
-                                    "\n                  " +
-                                      _vm._s(row.spartBuyQty) +
-                                      "\n                "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-danger btn-sm",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.deleteItem(row.spartCode)
-                                        }
-                                      }
-                                    },
-                                    [_c("i", { staticClass: "fa fa-trash" })]
-                                  )
-                                ])
-                              ]
-                            }
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.showAlertAdd == true,
+                            expression: "showAlertAdd==true"
                           }
-                        ])
+                        ],
+                        staticClass:
+                          "alert alert-success alert-dismissible fade show",
+                        attrs: { role: "alert" }
                       },
                       [
-                        _c("template", { slot: "columns" }, [
-                          _c("th", [_vm._v("No")]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Nama Barang")]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Harga")]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Jumlah")]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Hapus")])
-                        ])
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "alert-inner--text" }, [
+                          _vm._v("Data penjualan telah berhasil disimpan")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "close",
+                            attrs: { type: "button", "aria-label": "Close" },
+                            on: {
+                              click: function($event) {
+                                _vm.showAlertAdd = false
+                              }
+                            }
+                          },
+                          [
+                            _c("span", { attrs: { "aria-hidden": "true" } }, [
+                              _vm._v("×")
+                            ])
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("label", { staticClass: "form-label" }, [
+                      _vm._v("Total Tagihan :")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.saleTotal,
+                          expression: "saleTotal"
+                        }
                       ],
-                      2
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("div", {
-                  staticClass: "card-footer d-flex justify-content-end",
-                  class: _vm.type === "dark" ? "bg-transparent" : ""
-                })
-              ]
-            )
+                      staticClass: "form-control",
+                      attrs: { type: "number", disabled: "" },
+                      domProps: { value: _vm.saleTotal },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.saleTotal = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "table-responsive" },
+                [
+                  _c(
+                    "base-table",
+                    {
+                      staticClass: "table align-items-center table-flush",
+                      attrs: { "tbody-classes": "list", data: _vm.tableData },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function(ref) {
+                            var row = ref.row
+                            return [
+                              _c("td", { attrs: { scope: "row" } }, [
+                                _vm._v(
+                                  "\n                  " +
+                                    _vm._s(row.no) +
+                                    "\n                "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  "\n                  " +
+                                    _vm._s(row.spartName) +
+                                    "\n                "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  "\n                  " +
+                                    _vm._s(row.spartPrice) +
+                                    "\n                "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  "\n                  " +
+                                    _vm._s(row.spartBuyQty) +
+                                    "\n                "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-danger btn-sm",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.deleteItem(row.spartCode)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              ])
+                            ]
+                          }
+                        }
+                      ])
+                    },
+                    [
+                      _c("template", { slot: "columns" }, [
+                        _c("th", [_vm._v("No")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Nama Barang")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Harga")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Jumlah")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Hapus")])
+                      ])
+                    ],
+                    2
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", {
+                staticClass: "card-footer d-flex justify-content-end"
+              })
+            ])
           ])
         ])
       ])
@@ -7355,6 +7413,16 @@ var staticRenderFns = [
         _c("h3", { staticClass: "mt-3 mb-3" }, [_vm._v("Tambah Penjualan")]),
         _vm._v(" "),
         _c("hr", { staticClass: "my-4" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c("h3", { staticClass: "mb-0" }, [
+        _vm._v("\n                  Keranjang Belanja\n                ")
       ])
     ])
   },
@@ -9222,7 +9290,7 @@ var render = function() {
           _vm._m(1),
           _vm._v(" "),
           _c("span", { staticClass: "alert-inner--text" }, [
-            _vm._v("Data service telah berhasil disimpan")
+            _vm._v("Data servis telah berhasil disimpan")
           ]),
           _vm._v(" "),
           _c(
@@ -9259,7 +9327,7 @@ var render = function() {
           _vm._m(2),
           _vm._v(" "),
           _c("span", { staticClass: "alert-inner--text" }, [
-            _vm._v("Data service telah berhasil dirubah")
+            _vm._v("Servis telah selesai dilaksanakan")
           ]),
           _vm._v(" "),
           _c(
@@ -9270,43 +9338,6 @@ var render = function() {
               on: {
                 click: function($event) {
                   _vm.showAlertUpdate = false
-                }
-              }
-            },
-            [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.showAlertDelete == true,
-              expression: "showAlertDelete==true"
-            }
-          ],
-          staticClass: "alert alert-success alert-dismissible fade show",
-          attrs: { role: "alert" }
-        },
-        [
-          _vm._m(3),
-          _vm._v(" "),
-          _c("span", { staticClass: "alert-inner--text" }, [
-            _vm._v("Data service telah berhasil dihapus")
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "close",
-              attrs: { type: "button", "aria-label": "Close" },
-              on: {
-                click: function($event) {
-                  _vm.showAlertDelete = false
                 }
               }
             },
@@ -9374,9 +9405,33 @@ var render = function() {
                       _c(
                         "td",
                         [
-                          _c("badge", { staticClass: "badge badge-lg" }, [
-                            _vm._v(_vm._s(row.status))
-                          ])
+                          row.status == "Done"
+                            ? _c("badge", { staticClass: "badge badge-lg" }, [
+                                _vm._v(_vm._s(row.status))
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          row.status == "Working"
+                            ? _c(
+                                "badge",
+                                {
+                                  staticClass: "badge badge-lg",
+                                  attrs: { type: "primary" }
+                                },
+                                [_vm._v(_vm._s(row.status))]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          row.status == "Pending"
+                            ? _c(
+                                "badge",
+                                {
+                                  staticClass: "badge badge-lg",
+                                  attrs: { type: "warning" }
+                                },
+                                [_vm._v(_vm._s(row.status))]
+                              )
+                            : _vm._e()
                         ],
                         1
                       ),
@@ -9391,7 +9446,10 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  return _vm.loadServiceDetail(row.service_id)
+                                  return _vm.loadServiceDetail(
+                                    row.service_id,
+                                    row.status
+                                  )
                                 }
                               }
                             },
@@ -9401,24 +9459,26 @@ var render = function() {
                             ]
                           ),
                           _vm._v(" "),
-                          _c(
-                            "base-button",
-                            {
-                              attrs: { type: "success", size: "sm" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.startEditing(row.name, row.service_id)
-                                  _vm.startEditing2(row.address)
-                                  _vm.startEditing3(row.phone)
-                                }
-                              }
-                            },
-                            [
-                              _c("i", { staticClass: "fa fa-check" }),
-                              _vm._v(" Selesai\n                    ")
-                            ]
-                          )
+                          row.status == "Working"
+                            ? _c(
+                                "base-button",
+                                {
+                                  attrs: { type: "success", size: "sm" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.loadFinishService(
+                                        row.service_id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-check" }),
+                                  _vm._v(" Selesai\n                    ")
+                                ]
+                              )
+                            : _vm._e()
                         ],
                         1
                       )
@@ -10084,6 +10144,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control mb-2",
+                                  attrs: { id: "selNewSpart" },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -10130,6 +10191,7 @@ var render = function() {
                                 {
                                   staticClass:
                                     "btn btn-primary float-right mb-2",
+                                  attrs: { id: "buttAddNewSpart" },
                                   on: {
                                     click: function($event) {
                                       return _vm.addNewSpart()
@@ -10295,6 +10357,7 @@ var render = function() {
                                     }
                                   ],
                                   staticClass: "form-control mb-2",
+                                  attrs: { id: "selNewSjob" },
                                   on: {
                                     change: function($event) {
                                       var $$selectedVal = Array.prototype.filter
@@ -10341,6 +10404,7 @@ var render = function() {
                                 {
                                   staticClass:
                                     "btn btn-primary float-right mb-2",
+                                  attrs: { id: "buttAddNewSjob" },
                                   on: {
                                     click: function($event) {
                                       return _vm.addNewSjob()
@@ -10516,10 +10580,10 @@ var render = function() {
       _c(
         "modal",
         {
-          attrs: { show: _vm.modals.modal_delete_service },
+          attrs: { show: _vm.modals.modal_finish_service },
           on: {
             "update:show": function($event) {
-              return _vm.$set(_vm.modals, "modal_delete_service", $event)
+              return _vm.$set(_vm.modals, "modal_finish_service", $event)
             }
           }
         },
@@ -10529,16 +10593,100 @@ var render = function() {
               "h5",
               {
                 staticClass: "modal-title",
-                attrs: { id: "modal_delete_service" }
+                attrs: { id: "modal_finish_service" }
               },
-              [_vm._v("Hapus Data Servis")]
+              [_vm._v("Struk Servis")]
             )
           ]),
           _vm._v(" "),
-          _c("div", [
-            _c("label", [
-              _vm._v("Anda yakin ingin menghapus data service ini?")
-            ])
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "div",
+              { staticClass: "col-md-12 mt-n4" },
+              [
+                _c("p", { attrs: { hidden: "", id: "serId" } }),
+                _vm._v(" "),
+                _c("b", [_vm._v("Nama Pelanggan")]),
+                _vm._v(" "),
+                _c("p", { attrs: { id: "custNameF" } }),
+                _vm._v(" "),
+                _c("b", [_vm._v("Kendaraan")]),
+                _vm._v(" "),
+                _c("p", { attrs: { id: "vehicNameF" } }),
+                _vm._v(" "),
+                _c("b", [_vm._v("Plat Nomor")]),
+                _vm._v(" "),
+                _c("p", { attrs: { id: "vehicLicF" } }),
+                _vm._v(" "),
+                _c("b", [_vm._v("Nama Teknisi")]),
+                _vm._v(" "),
+                _c("p", { attrs: { id: "techNameF" } }),
+                _vm._v(" "),
+                _c("b", [_vm._v("Spare Part Servis")]),
+                _vm._v(" "),
+                _c(
+                  "ol",
+                  _vm._l(_vm.finishSpart, function(spartsF) {
+                    return _c("li", [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(spartsF.spart) +
+                          " : Rp " +
+                          _vm._s(spartsF.price) +
+                          "\n                    "
+                      )
+                    ])
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "Total Biaya Spare Part : Rp " +
+                      _vm._s(_vm.spartDetailTotalCost)
+                  )
+                ]),
+                _vm._v(" "),
+                _c("b", [_vm._v("Jasa Servis")]),
+                _vm._v(" "),
+                _c(
+                  "ol",
+                  _vm._l(_vm.finishSJobs, function(sjobsF) {
+                    return _c("li", [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(sjobsF.sjob) +
+                          " : Rp " +
+                          _vm._s(sjobsF.price) +
+                          "\n                    "
+                      )
+                    ])
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "Total Biaya Jasa : Rp " + _vm._s(_vm.sjobDetailTotalCost)
+                  )
+                ]),
+                _vm._v(" "),
+                _c("b", [_vm._v("Kategori Servis")]),
+                _vm._v(" "),
+                _c("p", { attrs: { id: "sCatF" } }),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("center", [
+                  _c("strong", [
+                    _vm._v(
+                      "Total Biaya Servis : Rp " + _vm._s(_vm.finishTotalCost)
+                    )
+                  ])
+                ])
+              ],
+              1
+            )
           ]),
           _vm._v(" "),
           _c(
@@ -10551,7 +10699,7 @@ var render = function() {
                   attrs: { type: "secondary" },
                   on: {
                     click: function($event) {
-                      _vm.modals.modal_delete_service = false
+                      _vm.modals.modal_finish_service = false
                     }
                   }
                 },
@@ -10561,15 +10709,14 @@ var render = function() {
               _c(
                 "base-button",
                 {
-                  attrs: { type: "danger" },
+                  attrs: { type: "primary" },
                   on: {
                     click: function($event) {
-                      $event.preventDefault()
-                      return _vm.deleteDataConfirm()
+                      return _vm.finishService()
                     }
                   }
                 },
-                [_vm._v("Ya, Hapus Data")]
+                [_vm._v("Simpan Pembayaran")]
               )
             ],
             1
@@ -10588,14 +10735,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-8" }, [
       _c("h3", { staticClass: "mb-0" }, [_vm._v("Antrian Service")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "alert-inner--icon" }, [
-      _c("i", { staticClass: "notification-70" })
     ])
   },
   function() {
@@ -12925,11 +13064,21 @@ var render = function() {
                       _c(
                         "td",
                         [
-                          _c(
-                            "badge",
-                            { attrs: { pill: "", type: "default" } },
-                            [_vm._v(_vm._s(row.status) + " Duty")]
-                          )
+                          row.status == "On"
+                            ? _c(
+                                "badge",
+                                { attrs: { pill: "", type: "primary" } },
+                                [_vm._v(_vm._s(row.status) + " Duty")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          row.status == "Off"
+                            ? _c(
+                                "badge",
+                                { attrs: { pill: "", type: "default" } },
+                                [_vm._v(_vm._s(row.status) + " Duty")]
+                              )
+                            : _vm._e()
                         ],
                         1
                       ),

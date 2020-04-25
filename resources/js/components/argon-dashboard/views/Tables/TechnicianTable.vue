@@ -65,7 +65,8 @@
               v-model="editPost">
           </td>
           <td>
-            <badge pill type="default">{{row.status}} Duty</badge>
+            <badge v-if="row.status == 'On'" pill type="primary">{{row.status}} Duty</badge>
+            <badge v-if="row.status == 'Off'" pill type="default">{{row.status}} Duty</badge>
           </td>
           <td>
 

@@ -62,11 +62,11 @@
 
         <!-- Cart Card -->
         <div class="col-xl-8 order-xl-1">
-          <div class="card shadow" :class="type === 'dark' ? 'bg-default': ''">
-            <div class="card-header border-0" :class="type === 'dark' ? 'bg-transparent': ''">
+          <div class="card shadow">
+            <div class="card-header border-0">
               <div class="row align-items-center">
                 <div class="col-6">
-                  <h3 class="mb-0" :class="type === 'dark' ? 'text-white': ''">
+                  <h3 class="mb-0">
                     Keranjang Belanja
                   </h3>
                 </div>
@@ -89,8 +89,8 @@
             </div>
 
             <div class="table-responsive">
-              <base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark': ''"
-                :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'" tbody-classes="list" :data="tableData">
+              <base-table class="table align-items-center table-flush"
+               tbody-classes="list" :data="tableData">
                 <template slot="columns">
                   <th>No</th>
                   <th>Nama Barang</th>
@@ -122,7 +122,7 @@
               </base-table>
             </div>
 
-            <div class="card-footer d-flex justify-content-end" :class="type === 'dark' ? 'bg-transparent': ''">
+            <div class="card-footer d-flex justify-content-end">
            
             </div>
 

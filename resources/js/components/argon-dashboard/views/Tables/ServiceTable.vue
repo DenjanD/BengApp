@@ -19,7 +19,7 @@
         <!-- Alert after add table data -->
         <div v-show="showAlertAdd==true" class="alert alert-success alert-dismissible fade show" role="alert">
             <span class="alert-inner--icon"><i class="notification-70"></i></span>
-            <span class="alert-inner--text">Data service telah berhasil disimpan</span>
+            <span class="alert-inner--text">Data servis telah berhasil disimpan</span>
             <button type="button" @click="showAlertAdd = false" class="close" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -28,17 +28,8 @@
         <!-- Alert after update table data -->
         <div v-show="showAlertUpdate==true" class="alert alert-success alert-dismissible fade show" role="alert">
             <span class="alert-inner--icon"><i class="notification-70"></i></span>
-            <span class="alert-inner--text">Data service telah berhasil dirubah</span>
+            <span class="alert-inner--text">Servis telah selesai dilaksanakan</span>
             <button type="button" @click="showAlertUpdate = false" class="close" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        <!-- Alert after delete table data -->
-        <div v-show="showAlertDelete==true" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span class="alert-inner--icon"><i class="notification-70"></i></span>
-            <span class="alert-inner--text">Data service telah berhasil dihapus</span>
-            <button type="button" @click="showAlertDelete = false" class="close" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -51,7 +42,7 @@
                     <th>Servis Id</th>
                     <th>Pelanggan</th>
                     <th>Kendaraan</th>
-                    <th>Teknisi</th>
+                    <th>Teknisi</th>    
                     <th>Status</th>
                     <th>Aksi</th>
                 </template>
@@ -71,14 +62,15 @@
                         {{ row.technician }}
                     </td>
                     <td>
-                        <badge class="badge badge-lg">{{ row.status }}</badge>
+                        <badge v-if="row.status == 'Done'" class="badge badge-lg">{{ row.status }}</badge>
+                        <badge v-if="row.status == 'Working'" type="primary" class="badge badge-lg">{{ row.status }}</badge>
+                        <badge v-if="row.status == 'Pending'" type="warning" class="badge badge-lg">{{ row.status }}</badge>
                     </td>
                     <td>
-                        <base-button type="info" size="sm" @click.prevent="loadServiceDetail(row.service_id)">
+                        <base-button type="info" size="sm" @click.prevent="loadServiceDetail(row.service_id,row.status)">
                             <i class="fa fa-bars"></i> Rincian
                         </base-button>
-                        <base-button type="success" size="sm"
-                            @click.prevent="startEditing(row.name,row.service_id); startEditing2(row.address); startEditing3(row.phone)">
+                        <base-button v-if="row.status == 'Working'" type="success" size="sm" @click.prevent="loadFinishService(row.service_id)">
                             <i class="fa fa-check"></i> Selesai
                         </base-button>
                     </td>
@@ -238,7 +230,7 @@
 
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <select class="form-control mb-2" v-model="newSpart">
+                                        <select id="selNewSpart" class="form-control mb-2" v-model="newSpart">
                                             <option selected>--- Pilih Spare Part Baru ---</option>
                                             <option v-for="spart in spartData">
                                                 {{ spart.spart_id }} | {{ spart.name }}
@@ -246,7 +238,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2">
-                                        <button v-on:click="addNewSpart()" class="btn btn-primary float-right mb-2"><i
+                                        <button id="buttAddNewSpart" v-on:click="addNewSpart()" class="btn btn-primary float-right mb-2"><i
                                                 class="fa fa-plus"></i></button>
                                     </div>
                                 </div>
@@ -297,7 +289,7 @@
 
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <select class="form-control mb-2" v-model="newSjob">
+                                        <select id="selNewSjob" class="form-control mb-2" v-model="newSjob">
                                             <option selected>--- Pilih Jasa Baru ---</option>
                                             <option v-for="sjob in sjobData">
                                                 {{ sjob.sjob_id }} | {{ sjob.name }}
@@ -305,7 +297,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2">
-                                        <button v-on:click="addNewSjob()" class="btn btn-primary float-right mb-2"><i
+                                        <button id="buttAddNewSjob" v-on:click="addNewSjob()" class="btn btn-primary float-right mb-2"><i
                                                 class="fa fa-plus"></i></button>
                                     </div>
                                 </div>
@@ -356,16 +348,54 @@
             </template>
         </modalstd>
 
-        <modal :show.sync="modals.modal_delete_service">
+        <!-- Modal Struk Servis -->
+        <modal :show.sync="modals.modal_finish_service">
             <template slot="header">
-                <h5 class="modal-title" id="modal_delete_service">Hapus Data Servis</h5>
+                <h5 class="modal-title" id="modal_finish_service">Struk Servis</h5>
             </template>
-            <div>
-                <label>Anda yakin ingin menghapus data service ini?</label>
+            <div class="row">
+                <div class="col-md-12 mt-n4">
+                    <p hidden id=serId></p>
+
+                    <b>Nama Pelanggan</b>
+                    <p id="custNameF"></p>
+
+                    <b>Kendaraan</b>
+                    <p id="vehicNameF"></p>
+
+                    <b>Plat Nomor</b>
+                    <p id="vehicLicF"></p>
+
+                    <b>Nama Teknisi</b>
+                    <p id="techNameF"></p>
+
+                    <b>Spare Part Servis</b>
+                    <ol>
+                        <li v-for="spartsF in finishSpart">
+                            {{ spartsF.spart }} : Rp {{ spartsF.price }}
+                        </li>
+                    </ol>
+                    <p>Total Biaya Spare Part : Rp {{ spartDetailTotalCost }}</p>
+
+                    <b>Jasa Servis</b>
+                    <ol>
+                        <li v-for="sjobsF in finishSJobs">
+                            {{ sjobsF.sjob }} : Rp {{ sjobsF.price }}
+                        </li>
+                    </ol>
+                    <p>Total Biaya Jasa : Rp {{ sjobDetailTotalCost }}</p>
+
+                    <b>Kategori Servis</b>
+                    <p id="sCatF"></p>
+
+                    <hr>
+                    <center><strong>Total Biaya Servis : Rp {{ finishTotalCost }}</strong></center>
+                </div>
+
             </div>
             <template slot="footer">
-                <base-button type="secondary" @click="modals.modal_delete_service = false">Batal</base-button>
-                <base-button type="danger" @click.prevent="deleteDataConfirm()">Ya, Hapus Data</base-button>
+                <base-button type="secondary" @click="modals.modal_finish_service = false">Batal</base-button>
+                <base-button @click="finishService()" type="primary">Simpan Pembayaran</base-button>
             </template>
         </modal>
 
@@ -375,7 +405,7 @@
     export default {
         data() {
             return {
-                modals: { modal_add_service: false, modal_detail_service: false, name: '', address: '', phone: '', modal_delete_service: false },
+                modals: { modal_add_service: false, modal_detail_service: false, name: '', address: '', phone: '', modal_finish_service: false },
                 model: {
                     customer: '--- Pilih Nama Pelanggan ---',
                     technician: '--- Pilih Nama Teknisi ---',
@@ -398,7 +428,7 @@
                 tableDataLength: 0,
                 tableDataShow: [],
                 pageShow: [],
-                perPage: 10,
+                perPage: 5,
                 pageNumbers: [],
                 paginations: 0,
                 dataPage: 1,
@@ -415,6 +445,9 @@
                 spartDetailTotalCost: 0,
                 showAlertAddSjob: false,
                 showAlertAddSpart: false,
+                finishSJobs: [],
+                finishSpart: [],
+                finishTotalCost: 0,
 
                 showAlertAdd: false,
                 showAlertUpdate: false,
@@ -477,8 +510,21 @@
                 })
             },
 
-            loadServiceDetail(serviceId) {
+            loadServiceDetail(serviceId,servStatus) {
                 this.axios.get("api/service/" + serviceId).then(response => {
+                    if (servStatus == 'Done') {
+                        document.getElementById("selNewSpart").style.display = "none"
+                        document.getElementById("selNewSjob").style.display = "none"
+                        document.getElementById("buttAddNewSpart").style.display = "none"
+                        document.getElementById("buttAddNewSjob").style.display = "none"
+                    }
+                    else {
+                        document.getElementById("selNewSpart").style.display = "block"
+                        document.getElementById("selNewSjob").style.display = "block"
+                        document.getElementById("buttAddNewSpart").style.display = "block"
+                        document.getElementById("buttAddNewSjob").style.display = "block"
+                    }
+
                     var sId = document.getElementById("sId").innerHTML = response.data.data.service_id
                     var custName = document.getElementById("custName").innerHTML = response.data.data.cust_name
                     var vehicName = document.getElementById("vehicName").innerHTML = response.data.data.vehicle_name
@@ -488,7 +534,7 @@
                     var serviceStartTime = document.getElementById("serviceStartTime").innerHTML = response.data.data.service_start_time
                     var compDesc = document.getElementById("compDesc").innerHTML = response.data.data.complaint_desc
                     var servDesc = document.getElementById("servDesc").innerHTML = response.data.data.service_desc
-                    var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name
+                    var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price
                     var totalCost = document.getElementById("totalCost").innerHTML = response.data.data.total_cost
 
                     this.axios.get("api/servicesjob/" + serviceId).then(response => {
@@ -506,9 +552,52 @@
                         for (var i = 0; i < this.tableSpart.length; i++) {
                             this.spartDetailTotalCost += this.tableSpart[i].price
                         }
-                        
+
                     })
                     this.modals.modal_detail_service = true
+                })
+            },
+
+            loadFinishService(serviceId) {
+                this.finishTotalCost = 0
+                this.axios.get("api/service/" + serviceId).then(response => {
+                    var serId = document.getElementById("serId").innerHTML = serviceId
+                    var custNameF = document.getElementById("custNameF").innerHTML = response.data.data.cust_name
+                    var vehicNameF = document.getElementById("vehicNameF").innerHTML = response.data.data.vehicle_name
+                    var vehicLicF = document.getElementById("vehicLicF").innerHTML = response.data.data.vehicle_license
+                    var techNameF = document.getElementById("techNameF").innerHTML = response.data.data.tech_name
+                    var sCatF = document.getElementById("sCatF").innerHTML = response.data.data.scat_name + " - Rp " + response.data.data.scat_price
+  
+                    this.axios.get("api/servicesjob/" + serviceId).then(response => {
+                        this.sjobDetailTotalCost = 0
+                        this.finishSJobs = response.data
+                        for (var i = 0; i < this.finishSJobs.length; i++) {
+                            this.sjobDetailTotalCost += this.finishSJobs[i].price
+                        }
+                        this.finishTotalCost += this.sjobDetailTotalCost
+                    })
+
+                    this.axios.get("api/servicespart/" + serviceId).then(response => {
+                        this.spartDetailTotalCost = 0
+                        this.finishSpart = response.data
+                        for (var i = 0; i < this.finishSpart.length; i++) {
+                            this.spartDetailTotalCost += this.finishSpart[i].price
+                        }
+                        this.finishTotalCost += this.spartDetailTotalCost
+                    })
+                    this.finishTotalCost += response.data.data.scat_price
+                    this.modals.modal_finish_service = true
+                })
+            },
+
+            finishService() {
+                var servId = document.getElementById("serId").innerHTML
+                this.axios.post("api/service/finish", {
+                    service_id: servId
+                }).then(response => {
+                    this.loadData()
+                    this.showAlertUpdate = true
+                    this.modals.modal_finish_service = false
                 })
             },
 

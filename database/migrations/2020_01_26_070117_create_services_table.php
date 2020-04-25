@@ -18,7 +18,7 @@ class CreateServicesTable extends Migration
             $table->bigInteger('teller')->unsigned();
             $table->bigInteger('customer')->unsigned();
             $table->bigInteger('technician')->unsigned();
-            $table->enum('status', ['Done','Working']);
+            $table->enum('status', ['Done','Working','Pending']);
             $table->timestamps();
 
             $table->foreign('teller')->references('user_id')->on('users');

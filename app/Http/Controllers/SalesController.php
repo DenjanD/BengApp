@@ -19,7 +19,7 @@ class SalesController extends Controller
     public function add(Request $request){
         $saleData = $request->input('saleData');
         $totalBill = $request->input('totalBill');
-
+        date_default_timezone_set('Asia/Jakarta');
         $newSale = new Sales([
             'total_bill' => $totalBill,
             'sold_date' => date('Y-m-d')

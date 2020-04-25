@@ -9,6 +9,7 @@ use App\Http\Controllers\ServiceSjobController;
 use App\Http\Controllers\ServiceSpartController;
 use App\Service_category;
 use Illuminate\Support\Facades\DB;
+use App\Service;
 
 class ServiceDetailController extends Controller
 {
@@ -26,7 +27,7 @@ class ServiceDetailController extends Controller
     public function read($id){
         // $data = Service_detail::where('id', $id)->first();
         $data = DB::table('services')
-        ->select('service_id','customers.name AS cust_name','vehicle_name','vehicle_license','kilometer','technicians.name AS tech_name','service_start_time','complaint_desc','service_desc','service_categories.name AS scat_name','total_cost')
+        ->select('service_id','customers.name AS cust_name','vehicle_name','vehicle_license','kilometer','technicians.name AS tech_name','service_start_time','complaint_desc','service_desc','service_categories.name AS scat_name','service_categories.price AS scat_price','total_cost')
         ->join('customers','customer','=','customer_id')
         ->join('service_details','service_id','=','id')
         ->join('technicians','technician','=','technician_id')
@@ -50,6 +51,7 @@ class ServiceDetailController extends Controller
         ]);
 
         //get service start time & date
+        date_default_timezone_set('Asia/Jakarta');
         $startTime = date("h:i:s");
         $startDate = date("Y-m-d");
 
@@ -66,26 +68,49 @@ class ServiceDetailController extends Controller
         //count total cost
         $totalCost = $spartCost + $sjobCost + $catCost;
 
-        $newSDetail = new Service_detail([
-            'id' => $serviceId,
-            'kilometer' => $request->input('kilometer'),
-            'service_start_time' => $startTime,
-            'service_date' => $startDate,
-            'vehicle_license' => $request->input('vehicle_license'),
-            'service_cost' => $catCost + $sjobCost,
-            'spart_cost' => $spartCost,
-            'total_cost' => $totalCost,
-            'vehicle_name' => $request->input('vehicle_name'),
-            'complaint_desc' => $request->input('complaint_desc'),
-            'scategory' => $request->input('scategory'),
-            'service_end_time' => null,
-            'service_desc' => $request->input('service_desc'),
-        ]);
+        //check service status
+        $serviceStatus = Service::where('service_id',$serviceId)->first();
+            if ($serviceStatus->status == 'Pending') {
+                $startTime = '00:00:00';
 
-        if ($newSDetail->save()) {
-            
-            return response()->json(['New Service has been added'], 200);
-        }
+                $newSDetail = new Service_detail([
+                    'id' => $serviceId,
+                    'kilometer' => $request->input('kilometer'),
+                    'service_start_time' => $startTime,
+                    'service_date' => $startDate,
+                    'vehicle_license' => $request->input('vehicle_license'),
+                    'service_cost' => $catCost + $sjobCost,
+                    'spart_cost' => $spartCost,
+                    'total_cost' => $totalCost,
+                    'vehicle_name' => $request->input('vehicle_name'),
+                    'complaint_desc' => $request->input('complaint_desc'),
+                    'scategory' => $request->input('scategory'),
+                    'service_end_time' => null,
+                    'service_desc' => $request->input('service_desc'),
+                ]);
+            }
+            else {
+                $newSDetail = new Service_detail([
+                    'id' => $serviceId,
+                    'kilometer' => $request->input('kilometer'),
+                    'service_start_time' => $startTime,
+                    'service_date' => $startDate,
+                    'vehicle_license' => $request->input('vehicle_license'),
+                    'service_cost' => $catCost + $sjobCost,
+                    'spart_cost' => $spartCost,
+                    'total_cost' => $totalCost,
+                    'vehicle_name' => $request->input('vehicle_name'),
+                    'complaint_desc' => $request->input('complaint_desc'),
+                    'scategory' => $request->input('scategory'),
+                    'service_end_time' => null,
+                    'service_desc' => $request->input('service_desc'),
+                ]);   
+            }
+            if ($newSDetail->save()) {
+                    
+                return response()->json(['New Service has been added'], 200);
+            }
+        
     }
 
     public function upSpart(Request $request){
@@ -124,12 +149,25 @@ class ServiceDetailController extends Controller
 
     public function finish(Request $request){
         //set service_end_time
+        date_default_timezone_set('Asia/Jakarta');
         $endTime = date('h:i:s');
         $upSDetail = Service_detail::where('id', $request->input('service_id'))->first();
         $upSDetail->service_end_time = $endTime;
         $upSDetail->update();
 
         //update service's status
-        $this->service->finish($request->input('service_id'));
+        return $this->service->finish($request->input('service_id'));
+    }
+
+    public function conService($remainSid){
+        $remainService = Service_detail::where('id',$remainSid)->first();
+
+        date_default_timezone_set('Asia/Jakarta');
+        $startTime = date("h:i:s");
+
+        $remainService->service_start_time = $startTime;
+        if ($remainService->update()) {
+            return response()->json(['msg' => 'Service has been finished. New service queue has started.'], 200);
+        }
     }
 }
