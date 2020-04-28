@@ -6,7 +6,8 @@
         <div class="container-fluid mt--7">
             <div class="row">
                 <div class="col">
-                    <service-table title="Antrian Servis"></service-table>    
+                    <service-table title="Antrian Servis"></service-table>
+                    <service-history-table class="mt-4" title="Riwayat Servis"></service-history-table>    
                 </div>
             </div>
         </div>
@@ -15,6 +16,7 @@
 </template>
 <script>
     import ServiceTable from './Tables/ServiceTable'
+    import ServiceHistoryTable from './Tables/ServiceHistoryTable'
 
   import Vue from 'vue'
   import VueClipboard from 'vue-clipboard2'
@@ -23,7 +25,8 @@
   export default {
     name: 'service',
     components: {
-        ServiceTable
+        ServiceTable,
+        ServiceHistoryTable
     },
     directives: {
       'b-tooltip': BTooltipDirective

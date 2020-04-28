@@ -25,6 +25,19 @@ class ServiceController extends Controller
         return response()->json($data, 200);
     }
 
+    public function readhistory(){
+        $data = DB::table("services")
+        ->select("service_id","customers.name AS customer","vehicle_name","vehicle_license","technicians.name AS technician","services.status")
+        ->join("customers",'customer_id','=','customer')
+        ->join("technicians",'technician_id','=','technician')
+        ->join("service_details",'service_id','=','id')
+        ->orderBy("service_id","desc")
+        ->where('services.status','Done')
+        ->get();
+
+        return response()->json($data, 200);
+    }
+
     public function add(Request $request){
         $this->validate($request, [
             'teller' => 'required',

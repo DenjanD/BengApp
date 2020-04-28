@@ -69,6 +69,7 @@ Route::post('service', 'ServiceDetailController@add');
 Route::post('service/finish', 'ServiceDetailController@finish');
 Route::post('servicespart', 'ServiceDetailController@upSpart');
 Route::post('servicesjob', 'ServiceDetailController@upSjob');
+Route::get('servicehistory', 'ServiceController@readhistory');
 
 //Customer APIs
 Route::get('customer', 'CustomerController@read');

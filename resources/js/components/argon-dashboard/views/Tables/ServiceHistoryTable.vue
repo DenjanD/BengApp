@@ -5,33 +5,14 @@
                 <div class="col">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            <h3 class="mb-0">Antrian Servis</h3>
+                            <h3 class="mb-0">Riwayat Servis</h3>
                         </div>
                         <div class="col-4 text-right">
-                            <base-button type="primary" size="sm" @click="modals.modal_add_service = true"><i
-                                    class="ni ni-fat-add" style="vertical-align: middle;"></i>Servis Baru</base-button>
+                            
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Alert after add table data -->
-        <div v-show="showAlertAdd==true" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span class="alert-inner--icon"><i class="notification-70"></i></span>
-            <span class="alert-inner--text">Data servis telah berhasil disimpan</span>
-            <button type="button" @click="showAlertAdd = false" class="close" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        <!-- Alert after update table data -->
-        <div v-show="showAlertUpdate==true" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span class="alert-inner--icon"><i class="notification-70"></i></span>
-            <span class="alert-inner--text">Servis telah selesai dilaksanakan</span>
-            <button type="button" @click="showAlertUpdate = false" class="close" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
         </div>
 
         <div class="table-responsive">
@@ -103,80 +84,6 @@
             </nav>
             <!-- /Table Pagination -->
         </div>
-
-        <!-- Modal Add Servis -->
-        <modalstd :show.sync="modals.modal_add_service">
-            <template slot="header">
-                <h5 class="modal-title" id="modal_delete_service">Tambah Servis</h5>
-            </template>
-            <div class="row mt-n3">
-                <div class="col-md-6">
-                    <form>
-                        <label class="form-control-label">Nama Pelanggan</label><br>
-                        <select class="form-control cust-form mb-4" v-model="model.customer">
-                            <option selected>--- Pilih Nama Pelanggan ---</option>
-                            <option v-for="cust in customerData">
-                                {{ cust.customer_id }} | {{ cust.name }}
-                            </option>
-                        </select>
-
-                        <label class="form-control-label">Teknisi yang ditugaskan</label><br>
-                        <select class="form-control cust-form mb-4" v-model="model.technician">
-                            <option selected>--- Pilih Nama Teknisi ---</option>
-                            <option v-for="tech in technicianData">
-                                {{ tech.technician_id }} | {{ tech.name }}
-                            </option>
-                        </select>
-
-                        <label class="form-control-label">Spare Part Servis</label><br>
-                        <select class="form-control cust-form mb-4" v-model="model.spart">
-                            <option selected>--- Pilih Spare Part ---</option>
-                            <option v-for="spart in spartData">
-                                {{ spart.spart_id }} | {{ spart.name }}
-                            </option>
-                        </select>
-
-                        <base-input alternative="" label="Kendaraan" placeholder="Kendaraan"
-                            input-classes="form-control-alternative" v-model="model.vehicle_name" />
-
-                        <base-input alternative="" label="Plat No Kendaraan" placeholder="Plat"
-                            input-classes="form-control-alternative" v-model="model.vehicle_license" />
-                    </form>
-                </div>
-                <div class="col-md-6">
-                    <base-input alternative="" label="Kilometer Kendaraan" placeholder="Kilometer"
-                        input-classes="form-control-alternative" v-model="model.kilometer" />
-
-                    <label class="form-control-label">Jasa Servis</label><br>
-                    <select class="form-control cust-form mb-4" v-model="model.sjob">
-                        <option selected>--- Pilih Jasa Servis ---</option>
-                        <option v-for="sjob in sjobData">
-                            {{ sjob.sjob_id }} | {{ sjob.name }}
-                        </option>
-                    </select>
-
-                    <base-input alternative="" label="Deskripsi Komplen" placeholder="Komplen"
-                        input-classes="form-control-alternative" v-model="model.complaint_desc" />
-
-                    <label class="form-control-label">Kategori Servis</label><br>
-                    <select class="form-control cust-form mb-4" v-model="model.scategory">
-                        <option selected>--- Pilih Kategori Servis ---</option>
-                        <option v-for="scat in scatData">
-                            {{ scat.scategory_id }} | {{ scat.name }}
-                        </option>
-                    </select>
-
-                    <base-input alternative="" label="Deskripsi Servis" placeholder="DServis"
-                        input-classes="form-control-alternative" v-model="model.service_desc" />
-
-                </div>
-            </div>
-            <template slot="footer">
-                <base-button class="mt-n3" type="secondary" @click="modals.modal_add_service = false">Batal
-                </base-button>
-                <base-button class="mt-n3" type="primary" @click="addData();">Tambah Servis</base-button>
-            </template>
-        </modalstd>
 
         <!-- Modal Detail Servis -->
         <modalstd :show.sync="modals.modal_detail_service">
@@ -347,57 +254,6 @@
                 <base-button type="secondary" @click="modals.modal_detail_service = false">Tutup</base-button>
             </template>
         </modalstd>
-
-        <!-- Modal Struk Servis -->
-        <modal :show.sync="modals.modal_finish_service">
-            <template slot="header">
-                <h5 class="modal-title" id="modal_finish_service">Struk Servis</h5>
-            </template>
-            <div class="row">
-                <div class="col-md-12 mt-n4">
-                    <p hidden id="serId"></p>
-
-                    <b>Nama Pelanggan</b>
-                    <p id="custNameF"></p>
-
-                    <b>Kendaraan</b>
-                    <p id="vehicNameF"></p>
-
-                    <b>Plat Nomor</b>
-                    <p id="vehicLicF"></p>
-
-                    <b>Nama Teknisi</b>
-                    <p id="techNameF"></p>
-
-                    <b>Spare Part Servis</b>
-                    <ol>
-                        <li v-for="spartsF in finishSpart">
-                            {{ spartsF.spart }} : Rp {{ spartsF.price }}
-                        </li>
-                    </ol>
-                    <p>Total Biaya Spare Part : Rp {{ spartDetailTotalCost }}</p>
-
-                    <b>Jasa Servis</b>
-                    <ol>
-                        <li v-for="sjobsF in finishSJobs">
-                            {{ sjobsF.sjob }} : Rp {{ sjobsF.price }}
-                        </li>
-                    </ol>
-                    <p>Total Biaya Jasa : Rp {{ sjobDetailTotalCost }}</p>
-
-                    <b>Kategori Servis</b>
-                    <p id="sCatF"></p>
-
-                    <hr>
-                    <center><strong>Total Biaya Servis : Rp {{ finishTotalCost }}</strong></center>
-                </div>
-
-            </div>
-            <template slot="footer">
-                <base-button type="secondary" @click="modals.modal_finish_service = false">Batal</base-button>
-                <base-button @click="finishService()" type="primary">Simpan Pembayaran</base-button>
-            </template>
-        </modal>
 
     </div>
 </template>
@@ -653,7 +509,7 @@
                 var i = 0
 
                 //Get service data from database
-                this.axios.get("api/service").then(response => {
+                this.axios.get("api/servicehistory").then(response => {
 
                     //Declare table data container
                     this.tableData = []
