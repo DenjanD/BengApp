@@ -157,7 +157,7 @@
                 tableDataLength: 0,
                 tableDataShow: [],
                 pageShow: [],
-                perPage: 3,
+                perPage: 5,
                 pageNumbers: [],
                 paginations: 0,
                 dataPage: 1,
@@ -208,7 +208,11 @@
                         var ind = 0
 
                         //Declare total data index
-                        var i = this.tableDataLength - 1
+                        if (this.tableDataLength == 1) {
+                      var i = 1
+                    }else {
+                      var i = this.tableDataLength - 1
+                    }
                         var o = 0
 
                         //Looping - When total data index > 0

@@ -1303,7 +1303,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 5,
+      perPage: 15,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -1359,7 +1359,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this.tableDataLength - 1;
+        if (_this.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -1779,7 +1784,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 5,
+      perPage: 15,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -1832,7 +1837,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this.tableDataLength - 1;
+        if (_this.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -2308,32 +2318,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2366,7 +2350,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 5,
+      perPage: 15,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -2471,17 +2455,17 @@ __webpack_require__.r(__webpack_exports__);
           document.getElementById("buttAddNewSjob").style.display = "block";
         }
 
-        var sId = document.getElementById("sId").innerHTML = response.data.data.service_id;
-        var custName = document.getElementById("custName").innerHTML = response.data.data.cust_name;
-        var vehicName = document.getElementById("vehicName").innerHTML = response.data.data.vehicle_name;
-        var vehicLic = document.getElementById("vehicLic").innerHTML = response.data.data.vehicle_license;
-        var kilometer = document.getElementById("kilometer").innerHTML = response.data.data.kilometer;
-        var techName = document.getElementById("techName").innerHTML = response.data.data.tech_name;
-        var serviceStartTime = document.getElementById("serviceStartTime").innerHTML = response.data.data.service_start_time;
-        var compDesc = document.getElementById("compDesc").innerHTML = response.data.data.complaint_desc;
-        var servDesc = document.getElementById("servDesc").innerHTML = response.data.data.service_desc;
-        var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price;
-        var totalCost = document.getElementById("totalCost").innerHTML = response.data.data.total_cost;
+        var sId = document.getElementById("sId2").innerHTML = response.data.data.service_id;
+        var custName = document.getElementById("custName2").innerHTML = response.data.data.cust_name;
+        var vehicName = document.getElementById("vehicName2").innerHTML = response.data.data.vehicle_name;
+        var vehicLic = document.getElementById("vehicLic2").innerHTML = response.data.data.vehicle_license;
+        var kilometer = document.getElementById("kilometer2").innerHTML = response.data.data.kilometer;
+        var techName = document.getElementById("techName2").innerHTML = response.data.data.tech_name;
+        var serviceStartTime = document.getElementById("serviceStartTime2").innerHTML = response.data.data.service_start_time;
+        var compDesc = document.getElementById("compDesc2").innerHTML = response.data.data.complaint_desc;
+        var servDesc = document.getElementById("servDesc2").innerHTML = response.data.data.service_desc;
+        var sCat = document.getElementById("sCat2").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price;
+        var totalCost = document.getElementById("totalCost2").innerHTML = response.data.data.total_cost;
 
         _this7.axios.get("api/servicesjob/" + serviceId).then(function (response) {
           _this7.sjobDetailTotalCost = 0;
@@ -2636,7 +2620,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this12.tableDataLength - 1;
+        if (_this12.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this12.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -3307,7 +3296,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 5,
+      perPage: 15,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -3577,7 +3566,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this12.tableDataLength - 1;
+        if (_this12.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this12.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -3974,7 +3968,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 3,
+      perPage: 5,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -4018,7 +4012,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this.tableDataLength - 1;
+        if (_this.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -4435,7 +4434,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 3,
+      perPage: 10,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -4492,7 +4491,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this.tableDataLength - 1;
+        if (_this.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -4978,7 +4982,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 5,
+      perPage: 15,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -5037,7 +5041,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this.tableDataLength - 1;
+        if (_this.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -5482,7 +5491,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 5,
+      perPage: 15,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -5535,7 +5544,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this.tableDataLength - 1;
+        if (_this.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -5959,7 +5973,7 @@ __webpack_require__.r(__webpack_exports__);
       tableDataLength: 0,
       tableDataShow: [],
       pageShow: [],
-      perPage: 5,
+      perPage: 15,
       pageNumbers: [],
       paginations: 0,
       dataPage: 1,
@@ -6038,7 +6052,12 @@ __webpack_require__.r(__webpack_exports__);
         var num = 1;
         var ind = 0; //Declare total data index
 
-        var i = _this3.tableDataLength - 1;
+        if (_this3.tableDataLength == 1) {
+          var i = 1;
+        } else {
+          var i = _this3.tableDataLength - 1;
+        }
+
         var o = 0; //Looping - When total data index > 0
 
         for (i; i > 0; i--) {
@@ -10365,49 +10384,49 @@ var render = function() {
             _c("div", { staticClass: "col-md-3" }, [
               _c("b", [_vm._v("Servis Id")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "sId" } }),
+              _c("p", { attrs: { id: "sId2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Nama Pelanggan")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "custName" } }),
+              _c("p", { attrs: { id: "custName2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Kendaraan")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "vehicName" } }),
+              _c("p", { attrs: { id: "vehicName2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Plat Nomor")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "vehicLic" } }),
+              _c("p", { attrs: { id: "vehicLic2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Jumlah Kilometer")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "kilometer" } })
+              _c("p", { attrs: { id: "kilometer2" } })
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-3" }, [
               _c("b", [_vm._v("Teknisi")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "techName" } }),
+              _c("p", { attrs: { id: "techName2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Jam Mulai Servis")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "serviceStartTime" } }),
+              _c("p", { attrs: { id: "serviceStartTime2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Deskripsi Komplen")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "compDesc" } }),
+              _c("p", { attrs: { id: "compDesc2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Deskripsi Tambahan")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "servDesc" } }),
+              _c("p", { attrs: { id: "servDesc2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Kategori Servis")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "sCat" } }),
+              _c("p", { attrs: { id: "sCat2" } }),
               _vm._v(" "),
               _c("b", [_vm._v("Total Biaya Servis")]),
               _vm._v(" "),
-              _c("p", { attrs: { id: "totalCost" } })
+              _c("p", { attrs: { id: "totalCost2" } })
             ]),
             _vm._v(" "),
             _c(
@@ -10436,79 +10455,6 @@ var render = function() {
                               )
                             ]
                           ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "row" }, [
-                            _c("div", { staticClass: "col-md-10" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.newSpart,
-                                      expression: "newSpart"
-                                    }
-                                  ],
-                                  staticClass: "form-control mb-2",
-                                  attrs: { id: "selNewSpart" },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.newSpart = $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("option", { attrs: { selected: "" } }, [
-                                    _vm._v("--- Pilih Spare Part Baru ---")
-                                  ]),
-                                  _vm._v(" "),
-                                  _vm._l(_vm.spartData, function(spart) {
-                                    return _c("option", [
-                                      _vm._v(
-                                        "\n                                            " +
-                                          _vm._s(spart.spart_id) +
-                                          " | " +
-                                          _vm._s(spart.name) +
-                                          "\n                                        "
-                                      )
-                                    ])
-                                  })
-                                ],
-                                2
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "col-md-2" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass:
-                                    "btn btn-primary float-right mb-2",
-                                  attrs: { id: "buttAddNewSpart" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.addNewSpart()
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fa fa-plus" })]
-                              )
-                            ])
-                          ]),
                           _vm._v(" "),
                           _c(
                             "div",
@@ -10649,79 +10595,6 @@ var render = function() {
                               )
                             ]
                           ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "row" }, [
-                            _c("div", { staticClass: "col-md-10" }, [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.newSjob,
-                                      expression: "newSjob"
-                                    }
-                                  ],
-                                  staticClass: "form-control mb-2",
-                                  attrs: { id: "selNewSjob" },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.newSjob = $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("option", { attrs: { selected: "" } }, [
-                                    _vm._v("--- Pilih Jasa Baru ---")
-                                  ]),
-                                  _vm._v(" "),
-                                  _vm._l(_vm.sjobData, function(sjob) {
-                                    return _c("option", [
-                                      _vm._v(
-                                        "\n                                            " +
-                                          _vm._s(sjob.sjob_id) +
-                                          " | " +
-                                          _vm._s(sjob.name) +
-                                          "\n                                        "
-                                      )
-                                    ])
-                                  })
-                                ],
-                                2
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "col-md-2" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass:
-                                    "btn btn-primary float-right mb-2",
-                                  attrs: { id: "buttAddNewSjob" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.addNewSjob()
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fa fa-plus" })]
-                              )
-                            ])
-                          ]),
                           _vm._v(" "),
                           _c(
                             "div",

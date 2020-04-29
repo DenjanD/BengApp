@@ -93,38 +93,38 @@
             <div class="row">
                 <div class="col-md-3">
                     <b>Servis Id</b>
-                    <p id="sId"></p>
+                    <p id="sId2"></p>
 
                     <b>Nama Pelanggan</b>
-                    <p id="custName"></p>
+                    <p id="custName2"></p>
 
                     <b>Kendaraan</b>
-                    <p id="vehicName"></p>
+                    <p id="vehicName2"></p>
 
                     <b>Plat Nomor</b>
-                    <p id="vehicLic"></p>
+                    <p id="vehicLic2"></p>
 
                     <b>Jumlah Kilometer</b>
-                    <p id="kilometer"></p>
+                    <p id="kilometer2"></p>
                 </div>
                 <div class="col-md-3">
                     <b>Teknisi</b>
-                    <p id="techName"></p>
+                    <p id="techName2"></p>
 
                     <b>Jam Mulai Servis</b>
-                    <p id="serviceStartTime"></p>
+                    <p id="serviceStartTime2"></p>
 
                     <b>Deskripsi Komplen</b>
-                    <p id="compDesc"></p>
+                    <p id="compDesc2"></p>
 
                     <b>Deskripsi Tambahan</b>
-                    <p id="servDesc"></p>
+                    <p id="servDesc2"></p>
 
                     <b>Kategori Servis</b>
-                    <p id="sCat"></p>
+                    <p id="sCat2"></p>
 
                     <b>Total Biaya Servis</b>
-                    <p id="totalCost"></p>
+                    <p id="totalCost2"></p>
                 </div>
                 <div class="col-md-6">
                     <tabs fill class="flex-column flex-md-row mt-n3">
@@ -135,20 +135,7 @@
                                     Spare Part
                                 </span>
 
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <select id="selNewSpart" class="form-control mb-2" v-model="newSpart">
-                                            <option selected>--- Pilih Spare Part Baru ---</option>
-                                            <option v-for="spart in spartData">
-                                                {{ spart.spart_id }} | {{ spart.name }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button id="buttAddNewSpart" v-on:click="addNewSpart()" class="btn btn-primary float-right mb-2"><i
-                                                class="fa fa-plus"></i></button>
-                                    </div>
-                                </div>
+                                
                                 <!-- Alert after add table data -->
                                 <div v-show="showAlertAddSpart==true"
                                     class="alert alert-success alert-dismissible fade show" role="alert">
@@ -194,20 +181,7 @@
                                     Jasa Servis
                                 </span>
 
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <select id="selNewSjob" class="form-control mb-2" v-model="newSjob">
-                                            <option selected>--- Pilih Jasa Baru ---</option>
-                                            <option v-for="sjob in sjobData">
-                                                {{ sjob.sjob_id }} | {{ sjob.name }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button id="buttAddNewSjob" v-on:click="addNewSjob()" class="btn btn-primary float-right mb-2"><i
-                                                class="fa fa-plus"></i></button>
-                                    </div>
-                                </div>
+                                
                                 <!-- Alert after add table data -->
                                 <div v-show="showAlertAddSjob==true"
                                     class="alert alert-success alert-dismissible fade show" role="alert">
@@ -284,7 +258,7 @@
                 tableDataLength: 0,
                 tableDataShow: [],
                 pageShow: [],
-                perPage: 5,
+                perPage: 15,
                 pageNumbers: [],
                 paginations: 0,
                 dataPage: 1,
@@ -381,17 +355,17 @@
                         document.getElementById("buttAddNewSjob").style.display = "block"
                     }
 
-                    var sId = document.getElementById("sId").innerHTML = response.data.data.service_id
-                    var custName = document.getElementById("custName").innerHTML = response.data.data.cust_name
-                    var vehicName = document.getElementById("vehicName").innerHTML = response.data.data.vehicle_name
-                    var vehicLic = document.getElementById("vehicLic").innerHTML = response.data.data.vehicle_license
-                    var kilometer = document.getElementById("kilometer").innerHTML = response.data.data.kilometer
-                    var techName = document.getElementById("techName").innerHTML = response.data.data.tech_name
-                    var serviceStartTime = document.getElementById("serviceStartTime").innerHTML = response.data.data.service_start_time
-                    var compDesc = document.getElementById("compDesc").innerHTML = response.data.data.complaint_desc
-                    var servDesc = document.getElementById("servDesc").innerHTML = response.data.data.service_desc
-                    var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price
-                    var totalCost = document.getElementById("totalCost").innerHTML = response.data.data.total_cost
+                    var sId = document.getElementById("sId2").innerHTML = response.data.data.service_id
+                    var custName = document.getElementById("custName2").innerHTML = response.data.data.cust_name
+                    var vehicName = document.getElementById("vehicName2").innerHTML = response.data.data.vehicle_name
+                    var vehicLic = document.getElementById("vehicLic2").innerHTML = response.data.data.vehicle_license
+                    var kilometer = document.getElementById("kilometer2").innerHTML = response.data.data.kilometer
+                    var techName = document.getElementById("techName2").innerHTML = response.data.data.tech_name
+                    var serviceStartTime = document.getElementById("serviceStartTime2").innerHTML = response.data.data.service_start_time
+                    var compDesc = document.getElementById("compDesc2").innerHTML = response.data.data.complaint_desc
+                    var servDesc = document.getElementById("servDesc2").innerHTML = response.data.data.service_desc
+                    var sCat = document.getElementById("sCat2").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price
+                    var totalCost = document.getElementById("totalCost2").innerHTML = response.data.data.total_cost
 
                     this.axios.get("api/servicesjob/" + serviceId).then(response => {
                         this.sjobDetailTotalCost = 0
@@ -536,7 +510,11 @@
                     var ind = 0
 
                     //Declare total data index
-                    var i = this.tableDataLength - 1
+                    if (this.tableDataLength == 1) {
+                      var i = 1
+                    }else {
+                      var i = this.tableDataLength - 1
+                    }
                     var o = 0
 
                     //Looping - When total data index > 0
