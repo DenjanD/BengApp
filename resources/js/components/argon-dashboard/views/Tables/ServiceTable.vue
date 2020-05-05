@@ -4,12 +4,22 @@
             <div class="row align-items-center">
                 <div class="col">
                     <div class="row align-items-center">
-                        <div class="col-8">
+                        <div class="col-6">
                             <h3 class="mb-0">Antrian Servis</h3>
                         </div>
-                        <div class="col-4 text-right">
+                        <div class="col-6 text-right">
+                            <select class="cust-form w-40 mb-3" v-model="searchFilter">
+                                <option selected>--- Filter Pencarian ---</option>
+                                <option>Servis Id</option>
+                                <option>Pelanggan</option>
+                                <option>Kendaraan</option>
+                                <option>Teknisi</option>
+                            </select>
                             <base-button type="primary" size="sm" @click="modals.modal_add_service = true"><i
                                     class="ni ni-fat-add" style="vertical-align: middle;"></i>Servis Baru</base-button>
+                            <base-input placeholder="Cari" class="input-group-alternative" alternative=""
+                                addon-right-icon="fas fa-search" v-model="searchKey">
+                            </base-input>
                         </div>
                     </div>
                 </div>
@@ -35,19 +45,17 @@
         </div>
 
         <div class="table-responsive">
-            <base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark': ''"
-                :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'" tbody-classes="list"
-                :data="tableDataShow">
-                <template slot="columns">
+            <table class="table align-items-center table-flush">
+                <tr class="cust-tr">
                     <th>Servis Id</th>
                     <th>Pelanggan</th>
                     <th>Kendaraan</th>
-                    <th>Teknisi</th>    
+                    <th>Teknisi</th>
                     <th>Status</th>
                     <th>Aksi</th>
-                </template>
+                </tr>
 
-                <template slot-scope="{row,index}">
+                <tr v-for="row in filteredDataShow">
                     <td>
                         {{ row.service_id }}
                     </td>
@@ -63,19 +71,23 @@
                     </td>
                     <td>
                         <badge v-if="row.status == 'Done'" class="badge badge-lg">{{ row.status }}</badge>
-                        <badge v-if="row.status == 'Working'" type="primary" class="badge badge-lg">{{ row.status }}</badge>
-                        <badge v-if="row.status == 'Pending'" type="warning" class="badge badge-lg">{{ row.status }}</badge>
+                        <badge v-if="row.status == 'Working'" type="primary" class="badge badge-lg">{{ row.status }}
+                        </badge>
+                        <badge v-if="row.status == 'Pending'" type="warning" class="badge badge-lg">{{ row.status }}
+                        </badge>
                     </td>
                     <td>
-                        <base-button type="info" size="sm" @click.prevent="loadServiceDetail(row.service_id,row.status)">
+                        <base-button type="info" size="sm"
+                            @click.prevent="loadServiceDetail(row.service_id,row.status)">
                             <i class="fa fa-bars"></i> Rincian
                         </base-button>
-                        <base-button v-if="row.status == 'Working'" type="success" size="sm" @click.prevent="loadFinishService(row.service_id)">
+                        <base-button v-if="row.status == 'Working'" type="success" size="sm"
+                            @click.prevent="loadFinishService(row.service_id)">
                             <i class="fa fa-check"></i> Selesai
                         </base-button>
                     </td>
-                </template>
-            </base-table>
+                </tr>
+            </table>
         </div>
 
         <div class="card-footer d-flex justify-content-end" :class="type === 'dark' ? 'bg-transparent': ''">
@@ -238,8 +250,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2">
-                                        <button id="buttAddNewSpart" v-on:click="addNewSpart()" class="btn btn-primary float-right mb-2"><i
-                                                class="fa fa-plus"></i></button>
+                                        <button id="buttAddNewSpart" v-on:click="addNewSpart()"
+                                            class="btn btn-primary float-right mb-2"><i class="fa fa-plus"></i></button>
                                     </div>
                                 </div>
                                 <!-- Alert after add table data -->
@@ -297,8 +309,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2">
-                                        <button id="buttAddNewSjob" v-on:click="addNewSjob()" class="btn btn-primary float-right mb-2"><i
-                                                class="fa fa-plus"></i></button>
+                                        <button id="buttAddNewSjob" v-on:click="addNewSjob()"
+                                            class="btn btn-primary float-right mb-2"><i class="fa fa-plus"></i></button>
                                     </div>
                                 </div>
                                 <!-- Alert after add table data -->
@@ -405,6 +417,8 @@
     export default {
         data() {
             return {
+                searchKey: '',
+                searchFilter: '--- Filter Pencarian ---',
                 modals: { modal_add_service: false, modal_detail_service: false, name: '', address: '', phone: '', modal_finish_service: false },
                 model: {
                     customer: '--- Pilih Nama Pelanggan ---',
@@ -510,7 +524,7 @@
                 })
             },
 
-            loadServiceDetail(serviceId,servStatus) {
+            loadServiceDetail(serviceId, servStatus) {
                 this.axios.get("api/service/" + serviceId).then(response => {
                     if (servStatus == 'Done') {
                         document.getElementById("selNewSpart").style.display = "none"
@@ -567,7 +581,7 @@
                     var vehicLicF = document.getElementById("vehicLicF").innerHTML = response.data.data.vehicle_license
                     var techNameF = document.getElementById("techNameF").innerHTML = response.data.data.tech_name
                     var sCatF = document.getElementById("sCatF").innerHTML = response.data.data.scat_name + " - Rp " + response.data.data.scat_price
-  
+
                     this.axios.get("api/servicesjob/" + serviceId).then(response => {
                         this.sjobDetailTotalCost = 0
                         this.finishSJobs = response.data
@@ -681,9 +695,9 @@
 
                     //Declare total data index
                     if (this.tableDataLength == 1) {
-                      var i = 1
-                    }else {
-                      var i = this.tableDataLength - 1
+                        var i = 1
+                    } else {
+                        var i = this.tableDataLength - 1
                     }
                     var o = 0
 
@@ -888,7 +902,25 @@
 
         },
         computed: {
-
+            filteredDataShow() {
+                return this.tableDataShow.filter((datas) => {
+                    if (this.searchFilter == '--- Filter Pencarian ---') {
+                        return datas
+                    } 
+                    if (this.searchFilter == 'Servis Id') {
+                        return datas.service_id.toString().match(this.searchKey)
+                    }
+                    if (this.searchFilter == 'Pelanggan') {
+                        return datas.customer.match(this.searchKey)
+                    }
+                    if (this.searchFilter == 'Kendaraan') {
+                        return datas.vehicle_name.match(this.searchKey)
+                    } 
+                    if (this.searchFilter == 'Teknisi') {
+                        return datas.technician.match(this.searchKey)
+                    }
+                })
+            }
         }
     }
 </script>
@@ -908,5 +940,9 @@
         -webkit-box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
         -moz-box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
         box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
+    }
+
+    .cust-tr {
+        background-color: rgb(245, 245, 245);
     }
 </style>

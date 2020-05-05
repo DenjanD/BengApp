@@ -2318,9 +2318,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      searchKey: '',
+      searchFilter: '--- Filter Pencarian ---',
       modals: {
         modal_add_service: false,
         modal_detail_service: false,
@@ -2847,7 +2851,33 @@ __webpack_require__.r(__webpack_exports__);
       this.showAlertUpdate = true;
     }
   },
-  computed: {}
+  computed: {
+    filteredDataShow: function filteredDataShow() {
+      var _this15 = this;
+
+      return this.tableDataShow.filter(function (datas) {
+        if (_this15.searchFilter == '--- Filter Pencarian ---') {
+          return datas;
+        }
+
+        if (_this15.searchFilter == 'Servis Id') {
+          return datas.service_id.toString().match(_this15.searchKey);
+        }
+
+        if (_this15.searchFilter == 'Pelanggan') {
+          return datas.customer.match(_this15.searchKey);
+        }
+
+        if (_this15.searchFilter == 'Kendaraan') {
+          return datas.vehicle_name.match(_this15.searchKey);
+        }
+
+        if (_this15.searchFilter == 'Teknisi') {
+          return datas.technician.match(_this15.searchKey);
+        }
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -3264,9 +3294,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      searchKey: '',
+      searchFilter: '--- Filter Pencarian ---',
       modals: {
         modal_add_service: false,
         modal_detail_service: false,
@@ -3793,7 +3837,33 @@ __webpack_require__.r(__webpack_exports__);
       this.showAlertUpdate = true;
     }
   },
-  computed: {}
+  computed: {
+    filteredDataShow: function filteredDataShow() {
+      var _this15 = this;
+
+      return this.tableDataShow.filter(function (datas) {
+        if (_this15.searchFilter == '--- Filter Pencarian ---') {
+          return datas;
+        }
+
+        if (_this15.searchFilter == 'Servis Id') {
+          return datas.service_id.toString().match(_this15.searchKey);
+        }
+
+        if (_this15.searchFilter == 'Pelanggan') {
+          return datas.customer.match(_this15.searchKey);
+        }
+
+        if (_this15.searchFilter == 'Kendaraan') {
+          return datas.vehicle_name.match(_this15.searchKey);
+        }
+
+        if (_this15.searchFilter == 'Teknisi') {
+          return datas.technician.match(_this15.searchKey);
+        }
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -6395,7 +6465,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, "\n.cust-form {\n    background-color: #FFFFFF;\n    border: solid 0px rgba(153, 153, 153, 1);\n    font-size: 13px;\n    color: #A8A8A8;\n    border-radius: 5px;\n    padding-top: 5px;\n    padding-bottom: 5px;\n    padding-left: 5px;\n    padding-right: 5px;\n    box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);\n}\n", ""]);
+exports.push([module.i, "\n.cust-form {\n    background-color: #FFFFFF;\n    border: solid 0px rgba(153, 153, 153, 1);\n    font-size: 13px;\n    color: #A8A8A8;\n    border-radius: 5px;\n    padding-top: 5px;\n    padding-bottom: 5px;\n    padding-left: 5px;\n    padding-right: 5px;\n    box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);\n}\n.cust-tr {\n    background-color: rgb(245, 245, 245);\n}\n", ""]);
 
 // exports
 
@@ -6414,7 +6484,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 
 
 // module
-exports.push([module.i, "\n.cust-form {\n    background-color: #FFFFFF;\n    border: solid 0px rgba(153, 153, 153, 1);\n    font-size: 13px;\n    color: #A8A8A8;\n    border-radius: 5px;\n    padding-top: 5px;\n    padding-bottom: 5px;\n    padding-left: 5px;\n    padding-right: 5px;\n    box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);\n}\n", ""]);
+exports.push([module.i, "\n.cust-form {\n    background-color: #FFFFFF;\n    border: solid 0px rgba(153, 153, 153, 1);\n    font-size: 13px;\n    color: #A8A8A8;\n    border-radius: 5px;\n    padding-top: 5px;\n    padding-bottom: 5px;\n    padding-left: 5px;\n    padding-right: 5px;\n    box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);\n}\n.cust-tr {\n    background-color: rgb(245, 245, 245);\n}\n", ""]);
 
 // exports
 
@@ -10111,170 +10181,176 @@ var render = function() {
           staticClass: "card-header border-0",
           class: _vm.type === "dark" ? "bg-transparent" : ""
         },
-        [_vm._m(0)]
+        [
+          _c("div", { staticClass: "row align-items-center" }, [
+            _c("div", { staticClass: "col" }, [
+              _c("div", { staticClass: "row align-items-center" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-6 text-right" },
+                  [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.searchFilter,
+                            expression: "searchFilter"
+                          }
+                        ],
+                        staticClass: "cust-form w-40 mb-3",
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.searchFilter = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { selected: "" } }, [
+                          _vm._v("--- Filter Pencarian ---")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Servis Id")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Pelanggan")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Kendaraan")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Teknisi")])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("base-input", {
+                      staticClass: "input-group-alternative",
+                      attrs: {
+                        placeholder: "Cari",
+                        alternative: "",
+                        "addon-right-icon": "fas fa-search"
+                      },
+                      model: {
+                        value: _vm.searchKey,
+                        callback: function($$v) {
+                          _vm.searchKey = $$v
+                        },
+                        expression: "searchKey"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ])
+          ])
+        ]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "table-responsive" },
-        [
-          _c(
-            "base-table",
-            {
-              staticClass: "table align-items-center table-flush",
-              class: _vm.type === "dark" ? "table-dark" : "",
-              attrs: {
-                "thead-classes":
-                  _vm.type === "dark" ? "thead-dark" : "thead-light",
-                "tbody-classes": "list",
-                data: _vm.tableDataShow
-              },
-              scopedSlots: _vm._u([
-                {
-                  key: "default",
-                  fn: function(ref) {
-                    var row = ref.row
-                    var index = ref.index
-                    return [
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.service_id) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.customer) +
-                            "\n\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.vehicle_name) +
-                            " - " +
-                            _vm._s(row.vehicle_license) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.technician) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          row.status == "Done"
-                            ? _c("badge", { staticClass: "badge badge-lg" }, [
-                                _vm._v(_vm._s(row.status))
-                              ])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          row.status == "Working"
-                            ? _c(
-                                "badge",
-                                {
-                                  staticClass: "badge badge-lg",
-                                  attrs: { type: "primary" }
-                                },
-                                [_vm._v(_vm._s(row.status))]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          row.status == "Pending"
-                            ? _c(
-                                "badge",
-                                {
-                                  staticClass: "badge badge-lg",
-                                  attrs: { type: "warning" }
-                                },
-                                [_vm._v(_vm._s(row.status))]
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          _c(
-                            "base-button",
-                            {
-                              attrs: { type: "info", size: "sm" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.loadServiceDetail(
-                                    row.service_id,
-                                    row.status
-                                  )
-                                }
+      _c("div", { staticClass: "table-responsive" }, [
+        _c(
+          "table",
+          { staticClass: "table align-items-center table-flush" },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _vm._l(_vm.filteredDataShow, function(row) {
+              return _c("tr", [
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.service_id) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.customer) +
+                      "\n\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.vehicle_name) +
+                      " - " +
+                      _vm._s(row.vehicle_license) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.technician) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  [
+                    _c(
+                      "base-button",
+                      {
+                        attrs: { type: "info", size: "sm" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.loadServiceDetail(
+                              row.service_id,
+                              row.status
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-bars" }),
+                        _vm._v(" Rincian\n                    ")
+                      ]
+                    ),
+                    _vm._v(" "),
+                    row.status == "Working"
+                      ? _c(
+                          "base-button",
+                          {
+                            attrs: { type: "success", size: "sm" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.loadFinishService(row.service_id)
                               }
-                            },
-                            [
-                              _c("i", { staticClass: "fa fa-bars" }),
-                              _vm._v(" Rincian\n                    ")
-                            ]
-                          ),
-                          _vm._v(" "),
-                          row.status == "Working"
-                            ? _c(
-                                "base-button",
-                                {
-                                  attrs: { type: "success", size: "sm" },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.loadFinishService(
-                                        row.service_id
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", { staticClass: "fa fa-check" }),
-                                  _vm._v(" Selesai\n                    ")
-                                ]
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    ]
-                  }
-                }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-check" }),
+                            _vm._v(" Selesai\n                    ")
+                          ]
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                )
               ])
-            },
-            [
-              _c("template", { slot: "columns" }, [
-                _c("th", [_vm._v("Servis Id")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Pelanggan")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Kendaraan")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Teknisi")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Status")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Aksi")])
-              ])
-            ],
-            2
-          )
-        ],
-        1
-      ),
+            })
+          ],
+          2
+        )
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -10765,16 +10841,24 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row align-items-center" }, [
-      _c("div", { staticClass: "col" }, [
-        _c("div", { staticClass: "row align-items-center" }, [
-          _c("div", { staticClass: "col-8" }, [
-            _c("h3", { staticClass: "mb-0" }, [_vm._v("Riwayat Servis")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-4 text-right" })
-        ])
-      ])
+    return _c("div", { staticClass: "col-6" }, [
+      _c("h3", { staticClass: "mb-0" }, [_vm._v("Antrian Servis")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", { staticClass: "cust-tr" }, [
+      _c("th", [_vm._v("Servis Id")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Pelanggan")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Kendaraan")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Teknisi")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Aksi")])
     ])
   }
 ]
@@ -10820,8 +10904,51 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "col-4 text-right" },
+                  { staticClass: "col-6 text-right" },
                   [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.searchFilter,
+                            expression: "searchFilter"
+                          }
+                        ],
+                        staticClass: "cust-form w-40 mb-3",
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.searchFilter = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { selected: "" } }, [
+                          _vm._v("--- Filter Pencarian ---")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Servis Id")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Pelanggan")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Kendaraan")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Teknisi")])
+                      ]
+                    ),
+                    _vm._v(" "),
                     _c(
                       "base-button",
                       {
@@ -10839,7 +10966,23 @@ var render = function() {
                         }),
                         _vm._v("Servis Baru")
                       ]
-                    )
+                    ),
+                    _vm._v(" "),
+                    _c("base-input", {
+                      staticClass: "input-group-alternative",
+                      attrs: {
+                        placeholder: "Cari",
+                        alternative: "",
+                        "addon-right-icon": "fas fa-search"
+                      },
+                      model: {
+                        value: _vm.searchKey,
+                        callback: function($$v) {
+                          _vm.searchKey = $$v
+                        },
+                        expression: "searchKey"
+                      }
+                    })
                   ],
                   1
                 )
@@ -10923,167 +11066,141 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "table-responsive" },
-        [
-          _c(
-            "base-table",
-            {
-              staticClass: "table align-items-center table-flush",
-              class: _vm.type === "dark" ? "table-dark" : "",
-              attrs: {
-                "thead-classes":
-                  _vm.type === "dark" ? "thead-dark" : "thead-light",
-                "tbody-classes": "list",
-                data: _vm.tableDataShow
-              },
-              scopedSlots: _vm._u([
-                {
-                  key: "default",
-                  fn: function(ref) {
-                    var row = ref.row
-                    var index = ref.index
-                    return [
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.service_id) +
-                            "\n                "
+      _c("div", { staticClass: "table-responsive" }, [
+        _c(
+          "table",
+          { staticClass: "table align-items-center table-flush" },
+          [
+            _vm._m(3),
+            _vm._v(" "),
+            _vm._l(_vm.filteredDataShow, function(row) {
+              return _c("tr", [
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.service_id) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.customer) +
+                      "\n\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.vehicle_name) +
+                      " - " +
+                      _vm._s(row.vehicle_license) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(row.technician) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  [
+                    row.status == "Done"
+                      ? _c("badge", { staticClass: "badge badge-lg" }, [
+                          _vm._v(_vm._s(row.status))
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    row.status == "Working"
+                      ? _c(
+                          "badge",
+                          {
+                            staticClass: "badge badge-lg",
+                            attrs: { type: "primary" }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(row.status) + "\n                    "
+                            )
+                          ]
                         )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.customer) +
-                            "\n\n                "
+                      : _vm._e(),
+                    _vm._v(" "),
+                    row.status == "Pending"
+                      ? _c(
+                          "badge",
+                          {
+                            staticClass: "badge badge-lg",
+                            attrs: { type: "warning" }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(row.status) + "\n                    "
+                            )
+                          ]
                         )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.vehicle_name) +
-                            " - " +
-                            _vm._s(row.vehicle_license) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(row.technician) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          row.status == "Done"
-                            ? _c("badge", { staticClass: "badge badge-lg" }, [
-                                _vm._v(_vm._s(row.status))
-                              ])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          row.status == "Working"
-                            ? _c(
-                                "badge",
-                                {
-                                  staticClass: "badge badge-lg",
-                                  attrs: { type: "primary" }
-                                },
-                                [_vm._v(_vm._s(row.status))]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          row.status == "Pending"
-                            ? _c(
-                                "badge",
-                                {
-                                  staticClass: "badge badge-lg",
-                                  attrs: { type: "warning" }
-                                },
-                                [_vm._v(_vm._s(row.status))]
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          _c(
-                            "base-button",
-                            {
-                              attrs: { type: "info", size: "sm" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.loadServiceDetail(
-                                    row.service_id,
-                                    row.status
-                                  )
-                                }
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  [
+                    _c(
+                      "base-button",
+                      {
+                        attrs: { type: "info", size: "sm" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.loadServiceDetail(
+                              row.service_id,
+                              row.status
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-bars" }),
+                        _vm._v(" Rincian\n                    ")
+                      ]
+                    ),
+                    _vm._v(" "),
+                    row.status == "Working"
+                      ? _c(
+                          "base-button",
+                          {
+                            attrs: { type: "success", size: "sm" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.loadFinishService(row.service_id)
                               }
-                            },
-                            [
-                              _c("i", { staticClass: "fa fa-bars" }),
-                              _vm._v(" Rincian\n                    ")
-                            ]
-                          ),
-                          _vm._v(" "),
-                          row.status == "Working"
-                            ? _c(
-                                "base-button",
-                                {
-                                  attrs: { type: "success", size: "sm" },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.loadFinishService(
-                                        row.service_id
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", { staticClass: "fa fa-check" }),
-                                  _vm._v(" Selesai\n                    ")
-                                ]
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    ]
-                  }
-                }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-check" }),
+                            _vm._v(" Selesai\n                    ")
+                          ]
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                )
               ])
-            },
-            [
-              _c("template", { slot: "columns" }, [
-                _c("th", [_vm._v("Servis Id")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Pelanggan")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Kendaraan")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Teknisi")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Status")]),
-                _vm._v(" "),
-                _c("th", [_vm._v("Aksi")])
-              ])
-            ],
-            2
-          )
-        ],
-        1
-      ),
+            })
+          ],
+          2
+        )
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -12310,7 +12427,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-8" }, [
+    return _c("div", { staticClass: "col-6" }, [
       _c("h3", { staticClass: "mb-0" }, [_vm._v("Antrian Servis")])
     ])
   },
@@ -12328,6 +12445,24 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "alert-inner--icon" }, [
       _c("i", { staticClass: "notification-70" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", { staticClass: "cust-tr" }, [
+      _c("th", [_vm._v("Servis Id")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Pelanggan")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Kendaraan")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Teknisi")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Status")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Aksi")])
     ])
   }
 ]
