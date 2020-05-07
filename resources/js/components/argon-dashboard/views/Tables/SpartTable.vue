@@ -2,8 +2,20 @@
     <card shadow type="secondary">
         <div slot="header" class="bg-white border-0">
             <div class="row align-items-center">
-                <div class="col-8">
+                <div class="col-6">
                     <h3 class="mb-0">Data Spare Part</h3>
+                </div>
+                <div class="col-6 text-right">
+                    <select class="cust-form w-40 mb-3" v-model="searchFilter">
+                        <option selected>--- Filter Pencarian ---</option>
+                        <option>Id Barang</option>
+                        <option>Nama</option>
+                        <option>Merek</option>
+                        <option>Kategori</option>
+                    </select>
+                    <base-input placeholder="Cari" class="input-group-alternative" alternative=""
+                        addon-right-icon="fas fa-search" v-model="searchKey">
+                    </base-input>
                 </div>
             </div>
         </div>
@@ -27,19 +39,20 @@
         </div>
 
         <div class="table-responsive">
-            <base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark': ''"
-                :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'" tbody-classes="list"
-                :data="tableDataShow">
-                <template slot="columns">
+            <table class="table align-items-center table-flush">
+                <tr class="cust-tr">
+                    <th>Id Barang</th>
                     <th>Nama Barang</th>
                     <th>Merek</th>
                     <th>Harga Jual</th>
                     <th>Jumlah</th>
                     <th>Kategori</th>
                     <th>Aksi</th>
-                </template>
-
-                <template slot-scope="{row,index}">
+                </tr>
+                <tr v-for="row in filteredDataShow">
+                    <td>
+                        {{ row.spart_id }}
+                    </td>
                     <td>
                         <span v-show="editOffset != row.name">{{ row.name }}</span>
                         <input v-show="editOffset==row.name" class="form-control" type="text"
@@ -91,8 +104,8 @@
                             </base-button>
                         </span>
                     </td>
-                </template>
-            </base-table>
+                </tr>
+            </table>
 
             <!-- Modal goes here -->
             <modal :show.sync="modals.modal_delete_spart">
@@ -164,6 +177,8 @@
         },
         data() {
             return {
+                searchKey: '',
+                searchFilter: '--- Filter Pencarian ---',
                 modals: { name: '', modal_delete_spart: false },
 
                 categories: [],
@@ -238,10 +253,10 @@
 
                         //Declare total data index
                         if (this.tableDataLength == 1) {
-                      var i = 1
-                    }else {
-                      var i = this.tableDataLength - 1
-                    }
+                            var i = 1
+                        } else {
+                            var i = this.tableDataLength - 1
+                        }
                         var o = 0
 
                         //Looping - When total data index > 0
@@ -497,6 +512,32 @@
                     this.isEnd = false
                 }
             }
+        },
+        computed: {
+            filteredDataShow() {
+                return this.tableDataShow.filter((datas) => {
+                    if (this.searchFilter == '--- Filter Pencarian ---') {
+                        return datas
+                    } 
+                    if (this.searchFilter == 'Id Barang') {
+                        return datas.spart_id.toString().match(this.searchKey)
+                    }
+                    if (this.searchFilter == 'Nama') {
+                        return datas.name.match(this.searchKey)
+                    }
+                    if (this.searchFilter == 'Merek') {
+                        return datas.brand.match(this.searchKey)
+                    } 
+                    if (this.searchFilter == 'Kategori') {
+                        return datas.category_name.match(this.searchKey)
+                    }
+                })
+            }
         }
     }
 </script>
+<style>
+    .cust-tr {
+        background-color: rgb(245, 245, 245);
+    }
+</style>

@@ -2,12 +2,20 @@
     <card shadow type="secondary">
         <div slot="header" class="bg-white border-0">
             <div class="row align-items-center">
-                <div class="col-8">
+                <div class="col-5">
                     <h3 class="mb-0">Kategori Spare Part</h3>
                 </div>
-                <div class="col-4 text-right">
+                <div class="col-7 text-right">
+                    <select class="cust-form w-40 mb-3" v-model="searchFilter">
+                        <option selected>--- Filter Pencarian ---</option>
+                        <option>ID Kategori</option>
+                        <option>Nama</option>
+                    </select>
                     <base-button type="primary" size="sm" @click="modals.modal_add_category = true">
                         <i class="ni ni-fat-add" style="vertical-align: middle;"></i>Tambah Kategori</base-button>
+                    <base-input placeholder="Cari" class="input-group-alternative" alternative=""
+                        addon-right-icon="fas fa-search" v-model="searchKey">
+                    </base-input>
                 </div>
             </div>
         </div>
@@ -40,16 +48,13 @@
         </div>
 
         <div class="table-responsive">
-            <base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark': ''"
-                :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'" tbody-classes="list"
-                :data="tableDataShow">
-                <template slot="columns">
+            <table class="table align-items-center table-flush">
+                <tr class="cust-tr">
                     <th>Id Kategori</th>
                     <th>Nama</th>
                     <th>Aksi</th>
-                </template>
-
-                <template slot-scope="{row,index}">
+                </tr>
+                <tr v-for="row in filteredDataShow">
                     <td>
                         {{ row.sp_category_id }}
                     </td>
@@ -78,8 +83,8 @@
                             </base-button>
                         </span>
                     </td>
-                </template>
-            </base-table>
+                </tr>
+            </table>
 
             <!-- Modal goes here -->
             <modal :show.sync="modals.modal_add_category">
@@ -107,7 +112,8 @@
                     <label>Anda yakin ingin menghapus data kateogri ini?</label>
                 </div>
                 <template slot="footer">
-                    <base-button type="secondary" @click="modals.modal_delete_category = false">Batal</base-button>
+                    <base-button type="secondary" @click="modals.modal_delete_category = false">Batal
+                    </base-button>
                     <base-button type="danger" @click.prevent="deleteDataConfirm()">Ya, Hapus Data</base-button>
                 </template>
             </modal>
@@ -150,6 +156,8 @@
         },
         data() {
             return {
+                searchKey: '',
+                searchFilter: '--- Filter Pencarian ---',
                 modals: { modal_add_category: false, name: '', modal_delete_category: false },
 
                 //Paginations
@@ -209,10 +217,10 @@
 
                         //Declare total data index
                         if (this.tableDataLength == 1) {
-                      var i = 1
-                    }else {
-                      var i = this.tableDataLength - 1
-                    }
+                            var i = 1
+                        } else {
+                            var i = this.tableDataLength - 1
+                        }
                         var o = 0
 
                         //Looping - When total data index > 0
@@ -409,6 +417,26 @@
                     this.isEnd = false
                 }
             }
+        },
+        computed: {
+            filteredDataShow() {
+                return this.tableDataShow.filter((datas) => {
+                    if (this.searchFilter == '--- Filter Pencarian ---') {
+                        return datas
+                    }
+                    if (this.searchFilter == 'ID Kategori') {
+                        return datas.sp_category_id.toString().match(this.searchKey)
+                    }
+                    if (this.searchFilter == 'Nama') {
+                        return datas.name.match(this.searchKey)
+                    }
+                })
+            }
         }
     }
 </script>
+<style>
+    .cust-tr {
+        background-color: rgb(245, 245, 245);
+    }
+</style>

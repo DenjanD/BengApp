@@ -9203,18 +9203,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -33745,114 +33733,29 @@ var render = function() {
       "div",
       { staticClass: "row align-items-center justify-content-lg-between" },
       [
+        _c("div", { staticClass: "col-lg-6" }),
+        _vm._v(" "),
         _c("div", { staticClass: "col-lg-6" }, [
           _c(
-            "div",
-            { staticClass: "copyright text-center text-lg-left text-muted" },
+            "ul",
+            {
+              staticClass:
+                "nav nav-footer justify-content-center justify-content-lg-end"
+            },
             [
-              _vm._v("\n        © " + _vm._s(_vm.year) + " "),
-              _c(
-                "a",
-                {
-                  staticClass: "font-weight-bold ml-1",
-                  attrs: {
-                    href: "https://www.creative-tim.com",
-                    target: "_blank"
-                  }
-                },
-                [_vm._v("Creative Tim")]
-              ),
-              _vm._v(" &\n        "),
-              _c(
-                "a",
-                {
-                  staticClass: "font-weight-bold ml-1",
-                  attrs: { href: "https://www.binarcode.com", target: "_blank" }
-                },
-                [_vm._v("Binar Code")]
-              )
+              _c("li", { staticClass: "nav-item" }, [
+                _c("a", { staticClass: "nav-link" }, [
+                  _vm._v("© " + _vm._s(_vm.year) + " _ammar_zaidan")
+                ])
+              ])
             ]
           )
-        ]),
-        _vm._v(" "),
-        _vm._m(0)
+        ])
       ]
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-lg-6" }, [
-      _c(
-        "ul",
-        {
-          staticClass:
-            "nav nav-footer justify-content-center justify-content-lg-end"
-        },
-        [
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link",
-                attrs: {
-                  href: "https://www.creative-tim.com",
-                  target: "_blank"
-                }
-              },
-              [_vm._v("Creative Tim")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link",
-                attrs: {
-                  href: "https://www.creative-tim.com/presentation",
-                  target: "_blank"
-                }
-              },
-              [_vm._v("About Us")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link",
-                attrs: {
-                  href: "http://blog.creative-tim.com",
-                  target: "_blank"
-                }
-              },
-              [_vm._v("Blog")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link",
-                attrs: {
-                  href: "https://www.creative-tim.com/license",
-                  target: "_blank"
-                }
-              },
-              [_vm._v("License")]
-            )
-          ])
-        ]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

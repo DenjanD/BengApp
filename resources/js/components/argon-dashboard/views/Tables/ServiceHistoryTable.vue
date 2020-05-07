@@ -5,7 +5,7 @@
                 <div class="col">
                     <div class="row align-items-center">
                         <div class="col-6">
-                            <h3 class="mb-0">Antrian Servis</h3>
+                            <h3 class="mb-0">Riwayat Servis</h3>
                         </div>
                         <div class="col-6 text-right">
                             <select class="cust-form w-40 mb-3" v-model="searchFilter">

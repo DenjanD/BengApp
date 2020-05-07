@@ -4,12 +4,21 @@
       <div class="row align-items-center">
         <div class="col">
           <div class="row align-items-center">
-            <div class="col-8">
+            <div class="col-5">
               <h3 class="mb-0">Daftar User Aplikasi</h3>
             </div>
-            <div class="col-4 text-right">
-              <base-button type="primary" size="sm" @click="modals.modal_add_user = true"><i
-                  class="ni ni-fat-add" style="vertical-align: middle;"></i>Tambah Data</base-button>
+            <div class="col-7 text-right">
+              <select class="cust-form w-40 mb-3" v-model="searchFilter">
+                <option selected>--- Filter Pencarian ---</option>
+                <option>Id User</option>
+                <option>Nama</option>
+                <option>Role User</option>
+              </select>
+              <base-button type="primary" size="sm" @click="modals.modal_add_user = true"><i class="ni ni-fat-add"
+                  style="vertical-align: middle;"></i>Tambah Data</base-button>
+              <base-input placeholder="Cari" class="input-group-alternative" alternative=""
+                addon-right-icon="fas fa-search" v-model="searchKey">
+              </base-input>
             </div>
           </div>
         </div>
@@ -44,16 +53,14 @@
     </div>
 
     <div class="table-responsive">
-      <base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark': ''"
-        :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'" tbody-classes="list" :data="tableDataShow">
-        <template slot="columns">
+      <table class="table align-items-center table-flush">
+        <tr class="cust-tr">
           <th>User Id</th>
           <th>Name</th>
           <th>Role User</th>
           <th>Aksi</th>
-        </template>
-
-        <template slot-scope="{row,index}">
+        </tr>
+        <tr v-for="row in filteredDataShow">
           <td>
             {{row.user_id}}
           </td>
@@ -63,12 +70,12 @@
               v-model="editPost">
           </td>
           <td>
-           {{ row.role }}
+            {{ row.role }}
           </td>
           <td>
 
             <span v-show="editOffset != row.name">
-              
+
               <base-button type="danger" v-show="index != 0" size="sm" @click="deleteData(row.user_id)">
                 <i class="fa fa-trash"></i> Hapus
               </base-button>
@@ -84,8 +91,8 @@
             </span>
 
           </td>
-        </template>
-      </base-table>
+        </tr>
+      </table>
     </div>
 
     <div class="card-footer d-flex justify-content-end" :class="type === 'dark' ? 'bg-transparent': ''">
@@ -167,7 +174,9 @@
   export default {
     data() {
       return {
-        roleData : {},
+        searchKey: '',
+        searchFilter: '--- Filter Pencarian ---',
+        roleData: {},
         modals: { modal_add_user: false, newname: '', newpass: '', newpassconf: '', newrole: '--- Pilih Role User ---', modal_delete_user: false },
 
         tableData: [],
@@ -212,15 +221,15 @@
           password_confirmation: this.modals.newpassconf,
           role: roleid
         })
-        .then(response => {
-          this.modals.modal_add_user = false
-          this.loadData();
-          this.modals.newname = '',
-          this.modals.newpass = '',
-          this.modals.newpassconf = '',
-          this.modals.newrole = '--- Pilih Role User ---'
-          this.showAlertAdd = true
-        })
+          .then(response => {
+            this.modals.modal_add_user = false
+            this.loadData();
+            this.modals.newname = '',
+              this.modals.newpass = '',
+              this.modals.newpassconf = '',
+              this.modals.newrole = '--- Pilih Role User ---'
+            this.showAlertAdd = true
+          })
       },
       loadRole() {
         this.axios.get("api/role").then(response => {
@@ -259,10 +268,10 @@
 
           //Declare total data index
           if (this.tableDataLength == 1) {
-                      var i = 1
-                    }else {
-                      var i = this.tableDataLength - 1
-                    }
+            var i = 1
+          } else {
+            var i = this.tableDataLength - 1
+          }
           var o = 0
 
           //Looping - When total data index > 0
@@ -459,25 +468,44 @@
       }
     },
     computed: {
-
+      filteredDataShow() {
+        return this.tableDataShow.filter((datas) => {
+          if (this.searchFilter == '--- Filter Pencarian ---') {
+            return datas
+          }
+          if (this.searchFilter == 'Id User') {
+            return datas.user_id.toString().match(this.searchKey)
+          }
+          if (this.searchFilter == 'Nama') {
+            return datas.name.match(this.searchKey)
+          }
+          if (this.searchFilter == 'Role User') {
+            return datas.role.toString().match(this.searchKey)
+          }
+        })
+      }
     }
   }
 </script>
 <style>
- .cust-form {
-        background-color: #FFFFFF;
-        border: solid 0px rgba(153, 153, 153, 1);
-        font-size: 13px;
-        color: #A8A8A8;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left: 5px;
-        padding-right: 5px;
-        -webkit-box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
-        -moz-box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
-        box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
-    }
+  .cust-form {
+    background-color: #FFFFFF;
+    border: solid 0px rgba(153, 153, 153, 1);
+    font-size: 13px;
+    color: #A8A8A8;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    -webkit-box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
+    -moz-box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
+    box-shadow: 0px 2px 13px -7px rgba(153, 153, 153, 1);
+  }
+
+  .cust-tr {
+      background-color: rgb(245, 245, 245);
+  }
 </style>
