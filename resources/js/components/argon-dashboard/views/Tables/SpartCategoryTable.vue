@@ -189,7 +189,10 @@
         },
         methods: {
             loadData() {
-                this.axios.get("api/spcategory").then(
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/spcategory", reqConfig).then(
                     response => {
                         //Declare table data container
                         this.tableData = []
@@ -289,9 +292,13 @@
                 )
             },
             addData() {
-                this.axios.post("api/spcategory", {
+                var postData = {
                     name: this.modals.name
-                })
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.post("api/spcategory", postData, reqConfig)
                     .then(response => {
                         //close modal
                         this.modals.modal_add_category = false
@@ -312,10 +319,14 @@
             },
             updatePost(index) {
                 //Update data in database via API
-                this.axios.post("/api/spcategory/update", {
+                var postData = {
                     name: this.editPost,
                     sp_category_id: this.updateId
-                }).then(response => {
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.post("/api/spcategory/update", postData, reqConfig).then(response => {
                     this.loadData()
                 });
                 this.editOffset = -1
@@ -334,7 +345,10 @@
                 this.deleteId = id
             },
             deleteDataConfirm() {
-                this.axios.delete("/api/spcategory/" + this.deleteId).then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.delete("/api/spcategory/" + this.deleteId, reqConfig).then(response => {
                     this.loadData()
                     this.showAlertDelete = true
                     this.modals.modal_delete_category = false

@@ -208,9 +208,11 @@
     methods: {
       loadData() {
         var i = 0
-
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+        }
         //Get customer data from database
-        this.axios.get("api/customer").then(response => {
+        this.axios.get("api/customer", reqConfig).then(response => {
 
           //Declare table data container
           this.tableData = []
@@ -385,10 +387,14 @@
         }
       },
       addData() {
-        this.axios.post("api/customer", {
+        var postData = {
           name: this.modals.name,
           phone: this.modals.phone
-        })
+        }
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+        }
+        this.axios.post("api/customer", postData, reqConfig)
           .then(response => {
             //close modal
             this.modals.modal_add_customer = false
@@ -419,11 +425,15 @@
       },
       updatePost(index) {
         //Update data in database via API
-        this.axios.post("/api/customer/update", {
+        var postData = {
           name: this.editPost,
           phone: this.editPost2,
           customer_id: this.updateId
-        }).then(response => {
+        }
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+        }
+        this.axios.post("/api/customer/update", postData, reqConfig).then(response => {
           this.loadData()
         });
         this.editOffset = -1
@@ -448,7 +458,10 @@
         this.deleteId = id
       },
       deleteDataConfirm() {
-        this.axios.delete("/api/customer/" + this.deleteId).then(response => {
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+        }
+        this.axios.delete("/api/customer/" + this.deleteId, reqConfig).then(response => {
           this.loadData()
           this.showAlertDelete = true
           this.modals.modal_delete_customer = false

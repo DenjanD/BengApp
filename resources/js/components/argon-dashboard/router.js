@@ -26,6 +26,11 @@ export default new Router({
           component: () => import(/* webpackChunkName: "demo" */ './views/Service.vue')
         },
         {
+          path: '/jobcat',
+          name: 'Jasa & Kategori Servis',
+          component: () => import(/* webpackChunkName: "demo" */ './views/JobCat.vue')
+        },
+        {
           path: '/spart',
           name: 'Spare Part',
           component: () => import(/* webpackChunkName: "demo" */ './views/SparePart.vue')
@@ -54,6 +59,11 @@ export default new Router({
           path: '/customer',
           name: 'Pelanggan',
           component: () => import(/* webpackChunkName: "demo" */ './views/Customer.vue')
+        },
+        {
+          path: '/report',
+          name: 'Laporan',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Report.vue')
         }
       ]
     },

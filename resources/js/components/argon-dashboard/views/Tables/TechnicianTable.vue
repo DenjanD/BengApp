@@ -202,7 +202,7 @@
         var i = 0
 
         //Get technician data from database
-        this.axios.get("api/technician").then(response => {
+        this.axios.get("api/technician", { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } }).then(response => {
 
           //Declare table data container
           this.tableData = []
@@ -377,9 +377,14 @@
         }
       },
       addData() {
-        this.axios.post("api/technician", {
+        var postData = {
           name: this.modals.name
-        })
+        }
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
+        }
+
+        this.axios.post("api/technician", postData, reqConfig)
           .then(response => {
             //close modal
             this.modals.modal_add_technician = false
@@ -400,10 +405,14 @@
       },
       updatePost(index) {
         //Update data in database via API
-        this.axios.post("/api/technician/update", {
+        var postData = {
           name: this.editPost,
           technician_id: this.updateId
-        }).then(response => {
+        }
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
+        }
+        this.axios.post("/api/technician/update", postData, reqConfig).then(response => {
           this.loadData()
         });
         this.editOffset = -1
@@ -422,7 +431,10 @@
         this.deleteId = id
       },
       deleteDataConfirm() {
-        this.axios.delete("/api/technician/" + this.deleteId).then(response => {
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+        }
+        this.axios.delete("/api/technician/" + this.deleteId, reqConfig).then(response => {
           this.loadData()
           this.showAlertDelete = true
           this.modals.modal_delete_technician = false

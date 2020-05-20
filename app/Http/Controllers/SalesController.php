@@ -13,8 +13,16 @@ class SalesController extends Controller
     public function read(){
         $data = Sales::all();
 
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data],200);
     }
+
+    public function read_details(){
+        $data = sale_detail::join('sales','sales.sale_id','=','sale_details.sale_id')
+                            ->join('spare_parts','spare_parts.spart_id','=','sale_details.spart_id')
+                            ->select('id','sale_details.sale_id','spare_parts.name','sale_details.quantity','total_price','sold_date')
+                            ->get();
+        return response()->json($data,200);
+    }   
 
     public function add(Request $request){
         $saleData = $request->input('saleData');

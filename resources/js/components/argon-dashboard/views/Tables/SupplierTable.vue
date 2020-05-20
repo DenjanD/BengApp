@@ -223,9 +223,11 @@
         methods: {
             loadData() {
                 var i = 0
-
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+                }
                 //Get supplier data from database
-                this.axios.get("api/supplier").then(response => {
+                this.axios.get("api/supplier", reqConfig).then(response => {
 
                     //Declare table data container
                     this.tableData = []
@@ -400,11 +402,15 @@
                 }
             },
             addData() {
-                this.axios.post("api/supplier", {
+                var postData = {
                     name: this.modals.name,
                     address: this.modals.address,
                     phone: this.modals.phone
-                })
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+                }
+                this.axios.post("api/supplier", postData, reqConfig)
                     .then(response => {
                         //close modal
                         this.modals.modal_add_supplier = false
@@ -447,12 +453,16 @@
 
             updatePost(index) {
                 //Update data in database via API
-                this.axios.post("/api/supplier/update", {
+                var postData = {
                     name: this.editPost,
                     address: this.editPost2,
                     phone: this.editPost3,
                     supplier_id: this.updateId
-                }).then(response => {
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+                }
+                this.axios.post("/api/supplier/update", postData, reqConfig).then(response => {
                     this.loadData()
                 });
                 this.editOffset = -1
@@ -483,7 +493,10 @@
                 this.deleteId = id
             },
             deleteDataConfirm() {
-                this.axios.delete("/api/supplier/" + this.deleteId).then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } 
+                }
+                this.axios.delete("/api/supplier/" + this.deleteId, reqConfig).then(response => {
                     this.loadData()
                     this.showAlertDelete = true
                     this.modals.modal_delete_supplier = false

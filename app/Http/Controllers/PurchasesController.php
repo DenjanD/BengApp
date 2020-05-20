@@ -15,7 +15,11 @@ class PurchasesController extends Controller
     }
 
     public function read(){
-        $data = Purchase::all();
+        //$data = Purchase::all();
+        $data = Purchase::join('spare_parts','spart','=','spart_id')
+                        ->join('suppliers','supplier','=','supplier_id')
+                        ->select('purchase_id','spare_parts.name AS spart','suppliers.name AS supplier','purchase_date','purchases.quantity','purchases.price AS buyPrice')
+                        ->get();
 
         return response()->json(['data' => $data]);
     }

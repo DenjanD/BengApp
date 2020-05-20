@@ -9,10 +9,15 @@ class TechnicianController extends Controller
 {
     //
     public function read(){
-
         $data = Technician::all();
 
         return response()->json($data, 200);
+    }
+
+    public function readAuth(){
+        $data = Technician::all();
+
+        return response()->json(['Authenticated' => 'Yes','data' => $data],200);
     }
 
     public function add(Request $request){

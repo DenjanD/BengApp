@@ -224,7 +224,10 @@
         },
         methods: {
             loadData() {
-                this.axios.get("api/spart").then(
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/spart", reqConfig).then(
                     response => {
                         //Declare table data container
                         this.tableData = []
@@ -377,16 +380,19 @@
                         catId = catId + this.editPost5.charAt(i)
                     }
                 }
-
-                //Update data in database via API
-                this.axios.post("/api/spart/update", {
+                var postData = {
                     name: this.editPost,
                     brand: this.editPost2,
                     price: this.editPost3,
                     quantity: this.editPost4,
                     category: catId,
                     spart_id: this.updateId
-                }).then(response => {
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                //Update data in database via API
+                this.axios.post("/api/spart/update", postData, reqConfig).then(response => {
                     this.loadData()
                 });
                 this.editOffset = -1
@@ -429,7 +435,10 @@
                 this.deleteId = id
             },
             deleteDataConfirm() {
-                this.axios.delete("/api/spart/" + this.deleteId).then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.delete("/api/spart/" + this.deleteId, reqConfig).then(response => {
                     this.loadData()
                     this.showAlertDelete = true
                     this.modals.modal_delete_spart = false
@@ -518,7 +527,7 @@
                 return this.tableDataShow.filter((datas) => {
                     if (this.searchFilter == '--- Filter Pencarian ---') {
                         return datas
-                    } 
+                    }
                     if (this.searchFilter == 'Id Barang') {
                         return datas.spart_id.toString().match(this.searchKey)
                     }
@@ -527,7 +536,7 @@
                     }
                     if (this.searchFilter == 'Merek') {
                         return datas.brand.match(this.searchKey)
-                    } 
+                    }
                     if (this.searchFilter == 'Kategori') {
                         return datas.category_name.match(this.searchKey)
                     }

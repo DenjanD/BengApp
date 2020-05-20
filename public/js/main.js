@@ -9264,6 +9264,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -33818,6 +33820,16 @@ var render = function() {
               _c("sidebar-item", {
                 attrs: {
                   link: {
+                    name: "Jasa & Kategori Servis",
+                    icon: "ni ni-collection text-default",
+                    path: "/jobcat"
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("sidebar-item", {
+                attrs: {
+                  link: {
                     name: "Penjualan",
                     icon: "ni ni-money-coins text-orange",
                     path: "/sales"
@@ -33871,6 +33883,16 @@ var render = function() {
                     name: "Pelanggan",
                     icon: "ni ni-circle-08 text-success",
                     path: "/customer"
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("sidebar-item", {
+                attrs: {
+                  link: {
+                    name: "Laporan",
+                    icon: "ni ni-single-copy-04",
+                    path: "/report"
                   }
                 }
               })
@@ -52433,6 +52455,12 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
         return Promise.all(/*! import() | demo */[__webpack_require__.e("vendors~demo"), __webpack_require__.e("demo")]).then(__webpack_require__.bind(null, /*! ./views/Service.vue */ "./resources/js/components/argon-dashboard/views/Service.vue"));
       }
     }, {
+      path: '/jobcat',
+      name: 'Jasa & Kategori Servis',
+      component: function component() {
+        return Promise.all(/*! import() | demo */[__webpack_require__.e("vendors~demo"), __webpack_require__.e("demo")]).then(__webpack_require__.bind(null, /*! ./views/JobCat.vue */ "./resources/js/components/argon-dashboard/views/JobCat.vue"));
+      }
+    }, {
       path: '/spart',
       name: 'Spare Part',
       component: function component() {
@@ -52467,6 +52495,12 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
       name: 'Pelanggan',
       component: function component() {
         return Promise.all(/*! import() | demo */[__webpack_require__.e("vendors~demo"), __webpack_require__.e("demo")]).then(__webpack_require__.bind(null, /*! ./views/Customer.vue */ "./resources/js/components/argon-dashboard/views/Customer.vue"));
+      }
+    }, {
+      path: '/report',
+      name: 'Laporan',
+      component: function component() {
+        return Promise.all(/*! import() | demo */[__webpack_require__.e("vendors~demo"), __webpack_require__.e("demo")]).then(__webpack_require__.bind(null, /*! ./views/Report.vue */ "./resources/js/components/argon-dashboard/views/Report.vue"));
       }
     }]
   }, {

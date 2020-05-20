@@ -11,7 +11,7 @@ class ServiceCategoryController extends Controller
     public function read(){
         $data = Service_category::all();
 
-        return response()->json(['data' => $data], 200);
+        return response()->json($data, 200);
     }
 
     public function add(Request $request){

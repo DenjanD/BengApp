@@ -8,8 +8,8 @@
               <h3 class="mb-0">Daftar Role User</h3>
             </div>
             <div class="col-4 text-right">
-              <base-button type="primary" size="sm" @click="modals.modal_add_role = true"><i
-                  class="ni ni-fat-add" style="vertical-align: middle;"></i>Tambah Data</base-button>
+              <base-button type="primary" size="sm" @click="modals.modal_add_role = true"><i class="ni ni-fat-add"
+                  style="vertical-align: middle;"></i>Tambah Data</base-button>
             </div>
           </div>
         </div>
@@ -186,9 +186,11 @@
     methods: {
       loadData() {
         var i = 0
-
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+        }
         //Get role data from database
-        this.axios.get("api/role").then(response => {
+        this.axios.get("api/role", reqConfig).then(response => {
 
           //Declare table data container
           this.tableData = []
@@ -216,10 +218,10 @@
 
           //Declare total data index
           if (this.tableDataLength == 1) {
-                      var i = 1
-                    }else {
-                      var i = this.tableDataLength - 1
-                    }
+            var i = 1
+          } else {
+            var i = this.tableDataLength - 1
+          }
           var o = 0
 
           //Looping - When total data index > 0
@@ -363,9 +365,13 @@
         }
       },
       addData() {
-        this.axios.post("api/role", {
+        var postData = {
           name: this.modals.name
-        })
+        }
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+        }
+        this.axios.post("api/role", postData, reqConfig)
           .then(response => {
             //close modal
             this.modals.modal_add_role = false
@@ -386,10 +392,14 @@
       },
       updatePost(index) {
         //Update data in database via API
-        this.axios.post("/api/role/update", {
+        var postData = {
           name: this.editPost,
           role_id: this.updateId
-        }).then(response => {
+        }
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+        }
+        this.axios.post("/api/role/update", postData, reqConfig).then(response => {
           this.loadData()
         });
         this.editOffset = -1
@@ -408,7 +418,10 @@
         this.deleteId = id
       },
       deleteDataConfirm() {
-        this.axios.delete("/api/role/" + this.deleteId).then(response => {
+        let reqConfig = {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+        }
+        this.axios.delete("/api/role/" + this.deleteId, reqConfig).then(response => {
           this.loadData()
           this.showAlertDelete = true
           this.modals.modal_delete_role = false

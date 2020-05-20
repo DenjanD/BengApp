@@ -11,7 +11,7 @@ class ServiceJobController extends Controller
     public function read(){
         $data = Service_job::all();
 
-        return response()->json(['data' => $data]);
+        return response()->json($data);
     }
 
     public function add(Request $request){

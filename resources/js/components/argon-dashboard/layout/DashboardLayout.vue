@@ -15,12 +15,14 @@
         />
 
         <sidebar-item :link="{name: 'Servis', icon: 'ni ni-settings text-blue', path: '/service'}"/>
+        <sidebar-item :link="{name: 'Jasa & Kategori Servis', icon: 'ni ni-collection text-default', path: '/jobcat'}"/>
         <sidebar-item :link="{name: 'Penjualan', icon: 'ni ni-money-coins text-orange', path: '/sales'}"/>
         <sidebar-item :link="{name: 'Spare Part', icon: 'ni ni-settings-gear-65 text-yellow', path: '/spart'}"/>
         <sidebar-item :link="{name: 'Supplier', icon: 'ni ni-box-2 text-red', path: '/supplier'}"/>
         <sidebar-item :link="{name: 'Teknisi', icon: 'ni ni-single-02 text-info', path: '/technician'}"/>
         <sidebar-item :link="{name: 'User', icon: 'ni ni-circle-08 text-primary', path: '/user'}"/>
         <sidebar-item :link="{name: 'Pelanggan', icon: 'ni ni-circle-08 text-success', path: '/customer'}"/>
+        <sidebar-item :link="{name: 'Laporan', icon: 'ni ni-single-copy-04', path: '/report'}"/>
 
       </template>
     </side-bar>

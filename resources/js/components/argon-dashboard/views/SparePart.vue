@@ -68,7 +68,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button class="btn btn-block btn-primary" v-on:click="addData()">Tambah Pembelian</button>
+                                    <button class="btn btn-block btn-primary" v-on:click="addData()">Tambah
+                                        Pembelian</button>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +113,10 @@
         },
         methods: {
             loadDatas() {
-                this.axios.get('api/spart').then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get('api/spart', reqConfig).then(response => {
                     this.categories = response.data.spartcategories
                     this.suppliers = response.data.suppliers
                 })
@@ -120,7 +124,7 @@
             addData() {
                 var katId = this.model.kategoriB.replace(/ .*/, '');
                 var supId = this.model.supplierB.replace(/ .*/, '');
-                this.axios.post("api/purchases", {
+                var postData = {
                     name: this.model.namaB,
                     brand: this.model.merekB,
                     price: this.model.hargaJualB,
@@ -128,7 +132,11 @@
                     category: katId,
                     supplier: supId,
                     buyPrice: this.model.hargaBeliB
-                })
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.post("api/purchases", postData, reqConfig)
                     .then(response => {
                         //This section call loadData() from SpartTable.vue
                         location.reload()

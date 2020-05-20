@@ -490,42 +490,59 @@
             getAuthUser() {
                 this.axios.get('api/user', { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } }).then(response => {
                     this.model.teller = response.data.user.user_id
-                    console.log(this.model.teller)
                 })
             },
 
             loadCustomer() {
-                this.axios.get("api/customer").then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/customer", reqConfig).then(response => {
                     this.customerData = response.data
                 })
             },
 
             loadTechnician() {
-                this.axios.get("api/technician").then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/technician", reqConfig).then(response => {
                     this.technicianData = response.data
                 })
             },
 
             loadSparePart() {
-                this.axios.get("api/spart").then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/spart", reqConfig).then(response => {
                     this.spartData = response.data.data
                 })
             },
 
             loadSjob() {
-                this.axios.get("api/sjob").then(response => {
-                    this.sjobData = response.data.data
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/sjob", reqConfig).then(response => {
+                    this.sjobData = response.data
                 })
             },
 
             loadScategory() {
-                this.axios.get("api/scat").then(response => {
-                    this.scatData = response.data.data
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/scat", reqConfig).then(response => {
+                    this.scatData = response.data
                 })
             },
 
             loadServiceDetail(serviceId, servStatus) {
-                this.axios.get("api/service/" + serviceId).then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/service/" + serviceId, reqConfig).then(response => {
                     if (servStatus == 'Done') {
                         document.getElementById("selNewSpart").style.display = "none"
                         document.getElementById("selNewSjob").style.display = "none"
@@ -551,7 +568,7 @@
                     var sCat = document.getElementById("sCat").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price
                     var totalCost = document.getElementById("totalCost").innerHTML = response.data.data.total_cost
 
-                    this.axios.get("api/servicesjob/" + serviceId).then(response => {
+                    this.axios.get("api/servicesjob/" + serviceId, reqConfig).then(response => {
                         this.sjobDetailTotalCost = 0
                         this.tableSJobs = response.data
                         for (var i = 0; i < this.tableSJobs.length; i++) {
@@ -560,7 +577,7 @@
 
                     })
 
-                    this.axios.get("api/servicespart/" + serviceId).then(response => {
+                    this.axios.get("api/servicespart/" + serviceId, reqConfig).then(response => {
                         this.spartDetailTotalCost = 0
                         this.tableSpart = response.data
                         for (var i = 0; i < this.tableSpart.length; i++) {
@@ -573,8 +590,11 @@
             },
 
             loadFinishService(serviceId) {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
                 this.finishTotalCost = 0
-                this.axios.get("api/service/" + serviceId).then(response => {
+                this.axios.get("api/service/" + serviceId, reqConfig).then(response => {
                     var serId = document.getElementById("serId").innerHTML = serviceId
                     var custNameF = document.getElementById("custNameF").innerHTML = response.data.data.cust_name
                     var vehicNameF = document.getElementById("vehicNameF").innerHTML = response.data.data.vehicle_name
@@ -582,7 +602,7 @@
                     var techNameF = document.getElementById("techNameF").innerHTML = response.data.data.tech_name
                     var sCatF = document.getElementById("sCatF").innerHTML = response.data.data.scat_name + " - Rp " + response.data.data.scat_price
 
-                    this.axios.get("api/servicesjob/" + serviceId).then(response => {
+                    this.axios.get("api/servicesjob/" + serviceId, reqConfig).then(response => {
                         this.sjobDetailTotalCost = 0
                         this.finishSJobs = response.data
                         for (var i = 0; i < this.finishSJobs.length; i++) {
@@ -591,7 +611,7 @@
                         this.finishTotalCost += this.sjobDetailTotalCost
                     })
 
-                    this.axios.get("api/servicespart/" + serviceId).then(response => {
+                    this.axios.get("api/servicespart/" + serviceId, reqConfig).then(response => {
                         this.spartDetailTotalCost = 0
                         this.finishSpart = response.data
                         for (var i = 0; i < this.finishSpart.length; i++) {
@@ -606,9 +626,13 @@
 
             finishService() {
                 var servId = document.getElementById("serId").innerHTML
-                this.axios.post("api/service/finish", {
+                var postData = {
                     service_id: servId
-                }).then(response => {
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.post("api/service/finish", postData, reqConfig).then(response => {
                     this.loadData()
                     this.showAlertUpdate = true
                     this.modals.modal_finish_service = false
@@ -622,13 +646,17 @@
                     return
                 }
                 var sjobId = this.newSjob.replace(/ .*/, '')
-                this.axios.post("api/servicesjob", {
+                var postData = {
                     service_id: servId,
                     sjob: sjobId
-                }).then(response => {
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.post("api/servicesjob", postData, reqConfig).then(response => {
                     this.sjobDetailTotalCost = 0
                     this.newSjob = '--- Pilih Jasa Baru ---'
-                    this.axios.get("api/servicesjob/" + servId).then(response => {
+                    this.axios.get("api/servicesjob/" + servId, reqConfig).then(response => {
                         this.tableSJobs = response.data
                         for (var i = 0; i < this.tableSJobs.length; i++) {
                             this.sjobDetailTotalCost += this.tableSJobs[i].price
@@ -646,13 +674,17 @@
                     return
                 }
                 var spartId = this.newSpart.replace(/ .*/, '')
-                this.axios.post("api/servicespart", {
+                var postData = {
                     service_id: servId,
                     spart: spartId
-                }).then(response => {
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.post("api/servicespart", postData, reqConfig).then(response => {
                     this.spartDetailTotalCost = 0
                     this.newSpart = '--- Pilih Spare Part Baru ---'
-                    this.axios.get("api/servicespart/" + servId).then(response => {
+                    this.axios.get("api/servicespart/" + servId, reqConfig).then(response => {
                         this.tableSpart = response.data
                         for (var i = 0; i < this.tableSpart.length; i++) {
                             this.spartDetailTotalCost += this.tableSpart[i].price
@@ -665,9 +697,11 @@
 
             loadData() {
                 var i = 0
-
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
                 //Get service data from database
-                this.axios.get("api/service").then(response => {
+                this.axios.get("api/service", reqConfig).then(response => {
 
                     //Declare table data container
                     this.tableData = []
@@ -847,7 +881,7 @@
                 var spartId = this.model.spart.replace(/ .*/, '');
                 var sjobId = this.model.sjob.replace(/ .*/, '');
                 var scatId = this.model.scategory.replace(/ .*/, '');
-                this.axios.post("api/service", {
+                var postData = {
                     teller: this.model.teller,
                     customer: custId,
                     technician: techId,
@@ -859,7 +893,11 @@
                     complaint_desc: this.model.complaint_desc,
                     scategory: scatId,
                     service_desc: this.model.service_desc
-                })
+                }
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.post("api/service", postData, reqConfig)
                     .then(response => {
                         //close modal
                         this.modals.modal_add_service = false
@@ -906,7 +944,7 @@
                 return this.tableDataShow.filter((datas) => {
                     if (this.searchFilter == '--- Filter Pencarian ---') {
                         return datas
-                    } 
+                    }
                     if (this.searchFilter == 'Servis Id') {
                         return datas.service_id.toString().match(this.searchKey)
                     }
@@ -915,7 +953,7 @@
                     }
                     if (this.searchFilter == 'Kendaraan') {
                         return datas.vehicle_name.match(this.searchKey)
-                    } 
+                    }
                     if (this.searchFilter == 'Teknisi') {
                         return datas.technician.match(this.searchKey)
                     }

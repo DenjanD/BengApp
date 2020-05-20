@@ -333,19 +333,28 @@
             },
 
             loadSjob() {
-                this.axios.get("api/sjob").then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/sjob", reqConfig).then(response => {
                     this.sjobData = response.data.data
                 })
             },
 
             loadScategory() {
-                this.axios.get("api/scat").then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/scat", reqConfig).then(response => {
                     this.scatData = response.data.data
                 })
             },
 
             loadServiceDetail(serviceId, servStatus) {
-                this.axios.get("api/service/" + serviceId).then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/service/" + serviceId, reqConfig).then(response => {
                     if (servStatus == 'Done') {
                         document.getElementById("selNewSpart").style.display = "none"
                         document.getElementById("selNewSjob").style.display = "none"
@@ -371,7 +380,7 @@
                     var sCat = document.getElementById("sCat2").innerHTML = response.data.data.scat_name + ' - Rp ' + response.data.data.scat_price
                     var totalCost = document.getElementById("totalCost2").innerHTML = response.data.data.total_cost
 
-                    this.axios.get("api/servicesjob/" + serviceId).then(response => {
+                    this.axios.get("api/servicesjob/" + serviceId, reqConfig).then(response => {
                         this.sjobDetailTotalCost = 0
                         this.tableSJobs = response.data
                         for (var i = 0; i < this.tableSJobs.length; i++) {
@@ -380,7 +389,7 @@
 
                     })
 
-                    this.axios.get("api/servicespart/" + serviceId).then(response => {
+                    this.axios.get("api/servicespart/" + serviceId, reqConfig).then(response => {
                         this.spartDetailTotalCost = 0
                         this.tableSpart = response.data
                         for (var i = 0; i < this.tableSpart.length; i++) {
@@ -394,7 +403,10 @@
 
             loadFinishService(serviceId) {
                 this.finishTotalCost = 0
-                this.axios.get("api/service/" + serviceId).then(response => {
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                this.axios.get("api/service/" + serviceId, reqConfig).then(response => {
                     var serId = document.getElementById("serId").innerHTML = serviceId
                     var custNameF = document.getElementById("custNameF").innerHTML = response.data.data.cust_name
                     var vehicNameF = document.getElementById("vehicNameF").innerHTML = response.data.data.vehicle_name
@@ -485,9 +497,11 @@
 
             loadData() {
                 var i = 0
-
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
                 //Get service data from database
-                this.axios.get("api/servicehistory").then(response => {
+                this.axios.get("api/servicehistory", reqConfig).then(response => {
 
                     //Declare table data container
                     this.tableData = []
@@ -726,7 +740,7 @@
                 return this.tableDataShow.filter((datas) => {
                     if (this.searchFilter == '--- Filter Pencarian ---') {
                         return datas
-                    } 
+                    }
                     if (this.searchFilter == 'Servis Id') {
                         return datas.service_id.toString().match(this.searchKey)
                     }
@@ -735,7 +749,7 @@
                     }
                     if (this.searchFilter == 'Kendaraan') {
                         return datas.vehicle_name.match(this.searchKey)
-                    } 
+                    }
                     if (this.searchFilter == 'Teknisi') {
                         return datas.technician.match(this.searchKey)
                     }
