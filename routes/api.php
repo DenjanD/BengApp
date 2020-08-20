@@ -46,6 +46,7 @@ Route::delete('spcategory/{id}', 'SparePartCategoryController@delete')->middlewa
 Route::get('spart', 'SparePartController@read')->middleware('jwt.verify');
 Route::post('spart/update', 'SparePartController@update')->middleware('jwt.verify');
 Route::delete('spart/{id}', 'SparePartController@delete')->middleware('jwt.verify');
+Route::get('spart/brand', 'SparePartController@brand')->middleware('jwt.verify');
 Route::get('purchases', 'PurchasesController@read')->middleware('jwt.verify');
 Route::post('purchases', 'PurchasesController@add')->middleware('jwt.verify');
 
@@ -71,6 +72,8 @@ Route::post('service/finish', 'ServiceDetailController@finish')->middleware('jwt
 Route::post('servicespart', 'ServiceDetailController@upSpart')->middleware('jwt.verify');
 Route::post('servicesjob', 'ServiceDetailController@upSjob')->middleware('jwt.verify');
 Route::get('servicehistory', 'ServiceController@readhistory')->middleware('jwt.verify');
+Route::post('servicesjob/delete', 'ServiceDetailController@delSjob')->middleware('jwt.verify');
+Route::post('servicespart/delete', 'ServiceDetailController@delSpart')->middleware('jwt.verify');
 
 //Customer APIs
 Route::get('customer', 'CustomerController@read')->middleware('jwt.verify');

@@ -127,7 +127,7 @@ class ServiceDetailController extends Controller
         $upServiceDetail->update();
 
         return response()->json([
-            'New part cost' => $newSpartCost,
+            'newSpartCost' => $newSpartCost,
             'Total Spart Cost' => $upServiceDetail->spart_cost,
             'Total Cost' => $upServiceDetail->total_cost
         ], 200);
@@ -145,6 +145,42 @@ class ServiceDetailController extends Controller
         //update service's total price
         $upServiceDetail->total_cost += $newSjobCost;
         $upServiceDetail->update();
+
+        return response()->json(['newSjobCost' => $newSjobCost], 200);
+    }
+
+    public function delSjob(Request $request){
+        $sId = $request->input('servId');
+        $jId = $request->input('jobId');
+        $delSjobCost = $this->serviceSjob->delete($sId, $jId);
+
+        //update service's service_cost
+        $upServiceDetail = Service_detail::where('id', $sId)->first();
+        $upServiceDetail->service_cost -= $delSjobCost;
+
+        //update service's total price
+        $upServiceDetail->total_cost -= $delSjobCost;
+        
+        if ($upServiceDetail->update()) {
+            return response()->json(['jobCost' => $delSjobCost], 200);
+        }     
+    }
+
+    public function delSpart(Request $request){
+        $sId = $request->input('servId');
+        $spId = $request->input('spartId');
+        $delSpartCost = $this->serviceSpart->delete($sId, $spId);
+
+        //update service's service_cost
+        $upServiceDetail = Service_detail::where('id', $sId)->first();
+        $upServiceDetail->spart_cost -= $delSpartCost;
+
+        //update service's total price
+        $upServiceDetail->total_cost -= $delSpartCost;
+        
+        if ($upServiceDetail->update()) {
+            return response()->json(['spartCost' => $delSpartCost], 200);
+        }     
     }
 
     public function finish(Request $request){

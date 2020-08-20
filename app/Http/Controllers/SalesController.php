@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Sales;
 use App\sale_detail;
 use App\Spare_parts;
+use App\Exports\SalesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SalesController extends Controller
 {
@@ -117,6 +119,24 @@ class SalesController extends Controller
         ];
 
         return response()->json(['spartData' => $spartData], 200);
+    }
+
+    public function export(Request $request) {
+        $getStartDate = $request->startDate3;
+        $getEndDate = $request->endDate3;
+        $getBrand = $request->selBrand;
+        $getSpartCat = $request->selSpartCat;
+        $getSupplier = $request->selSupplier;
+
+        $exportFilter = [
+            'startDate' => $getStartDate,
+            'endDate' => $getEndDate,
+            'brand' => $getBrand,
+            'spartCat' => $getSpartCat,
+            'supplier' => $getSupplier
+        ];
+    
+        return Excel::download(new SalesExport($exportFilter), 'Data Penjualan.xlsx');
     }
 
 }

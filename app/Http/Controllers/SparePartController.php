@@ -78,4 +78,12 @@ class SparePartController extends Controller
         }
         return response()->json(['Error during deletion'], 404);
     }
+
+    public function brand() {
+        $brandData = Spare_parts::select('brand AS name')
+        ->groupBy('brand')
+        ->get();
+
+        return $brandData;
+    }
 }

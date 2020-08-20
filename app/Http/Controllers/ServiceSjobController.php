@@ -11,16 +11,17 @@ class ServiceSjobController extends Controller
 {
     //
     public function read(){
-        $data = ServiceJob::all();
+        $data = ServiceSJob::all();
 
         return response()->json(['sjob' => $data]);
     }
 
     public function readservicejob($id){
         $data = DB::table("service_sjobs")
-        ->select('name AS job','price')
+        ->select('sjob_id','name AS job','price')
         ->join('service_jobs','sjob','=','sjob_id')
         ->where('service_id',$id)
+        ->orderBy('id')
         ->get();
 
         return response()->json($data, 200);
@@ -44,5 +45,19 @@ class ServiceSjobController extends Controller
     
             return $jobCost;
         }   
+    }
+
+    public function delete($servId, $jobId){
+        $sjob = Service_job::where('sjob_id', $jobId)->first();
+        $jobCost = $sjob->price;
+
+        $sjobDel = DB::table('service_sjobs')
+        ->where('service_id',$servId)
+        ->where('sjob',$jobId);
+
+        $sjobDel->delete();
+
+        return $jobCost;
+        
     }
 }

@@ -18,9 +18,10 @@ class ServiceSpartController extends Controller
 
     public function readservicespart($id){
         $data = DB::table('spare_parts')
-        ->select('name AS spart','price')
+        ->select('spart_id','name AS spart','price')
         ->join('service_sparts','spart','=','spart_id')
         ->where('service_id',$id)
+        ->orderBy('id')
         ->get();
 
         return response()->json($data,200);
@@ -50,5 +51,19 @@ class ServiceSpartController extends Controller
 
             return $spartCost;
         }
+    }
+
+    public function delete($servId, $spartId){
+        $spart = Spare_parts::where('spart_id', $spartId)->first();
+        $spartCost = $spart->price;
+
+        $spartDel = DB::table('service_sparts')
+        ->where('service_id',$servId)
+        ->where('spart',$spartId);
+
+        $spartDel->delete();
+
+        return $spartCost;
+        
     }
 }

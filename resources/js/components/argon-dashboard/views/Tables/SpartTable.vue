@@ -107,7 +107,7 @@
                 </tr>
             </table>
 
-            <!-- Modal goes here -->
+            <!-- Modal Delete Spart -->
             <modal :show.sync="modals.modal_delete_spart">
                 <template slot="header">
                     <h5 class="modal-title" id="modal_delete_spart">Hapus Data Spare Part</h5>
@@ -373,12 +373,15 @@
             updatePost(index, catName) {
                 if (this.editPost5 != catName) {
                     //get category id value from select
-                    var limitSpacePosition = this.editPost5.indexOf(" ")
+                    /*var limitSpacePosition = this.editPost5.indexOf(" ")
                     console.log(this.editPost5)
                     var catId = ""
                     for (var i = 0; i < limitSpacePosition; i++) {
                         catId = catId + this.editPost5.charAt(i)
-                    }
+                    }*/
+                    //get category id value from select #2
+                    var limitSpacePosition = this.editPost5.replace(/ .*/, '')
+                    var catId = limitSpacePosition
                 }
                 var postData = {
                     name: this.editPost,

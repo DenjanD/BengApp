@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Service;
 use App\Technician;
+use App\Exports\ServiceExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ServiceController extends Controller
 {
@@ -103,5 +105,23 @@ class ServiceController extends Controller
     
             return response()->json(['msg' => 'Service has been done'], 200);
         }
+    }
+
+    public function export(Request $request) {
+        $getStartDate = $request->startDate;
+        $getEndDate = $request->endDate;
+        $getTeller = $request->selTeller;
+        $getTech = $request->selTech;
+        $getServCat = $request->selServCat;
+
+        $exportFilter = [
+            'startDate' => $getStartDate,
+            'endDate' => $getEndDate,
+            'teller' => $getTeller,
+            'technician' => $getTech,
+            'servCat' => $getServCat
+        ];
+
+        return Excel::download(new ServiceExport($exportFilter), 'Data Service.xlsx');
     }
 }

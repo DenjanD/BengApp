@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Purchase;
 use App\Http\Controllers\SparePartController;
+use App\Exports\PurchaseExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PurchasesController extends Controller
 {
@@ -48,5 +50,21 @@ class PurchasesController extends Controller
             return response()->json(['msg' => 'Spare part has been added'], 200);
         }
         return response()->json(['msg' => 'Error during adding spare part'], 404);
+    }
+
+    public function export(Request $request) {
+        $getStartDate = $request->startDate2;
+        $getEndDate = $request->endDate2;
+        $getSupplier = $request->selSupplier;
+        $getSpartCat = $request->selSpartCat;
+
+        $exportFilter = [
+            'startDate' => $getStartDate,
+            'endDate' => $getEndDate,
+            'supplier' => $getSupplier,
+            'spartCat' => $getSpartCat
+        ];
+
+        return Excel::download(new PurchaseExport($exportFilter), 'Data Pembelian.xlsx');
     }
 }

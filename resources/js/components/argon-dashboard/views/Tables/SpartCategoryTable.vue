@@ -54,7 +54,7 @@
                     <th>Nama</th>
                     <th>Aksi</th>
                 </tr>
-                <tr v-for="row in filteredDataShow">
+                <tr v-for="row in filteredDataShow" v-bind:key="row.sp_category_id">
                     <td>
                         {{ row.sp_category_id }}
                     </td>
@@ -109,7 +109,7 @@
                     <h5 class="modal-title" id="modal_delete_category">Hapus Data Teknisi</h5>
                 </template>
                 <div>
-                    <label>Anda yakin ingin menghapus data kateogri ini?</label>
+                    <label>Anda yakin ingin menghapus data kategori ini?</label>
                 </div>
                 <template slot="footer">
                     <base-button type="secondary" @click="modals.modal_delete_category = false">Batal
@@ -131,7 +131,7 @@
                         </button>
                     </li>
 
-                    <li v-for="number in pageNumbers" :class="{ active: number.number == dataPage}" class="page-item"
+                    <li v-for="number in pageNumbers" v-bind:key="number.number" :class="{ active: number.number == dataPage}" class="page-item"
                         @click="changePage(number.number)"><button class="page-link">{{ number.number }}</button></li>
 
                     <li class="page-item" v-bind:class="{ disabled: isEnd }">

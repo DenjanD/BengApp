@@ -14,3 +14,8 @@
 Route::get('/','HomeController@dashboard');
 Route::get('/login','LoginController@index');
 Route::get('/dashboard','HomeController@dashboard');
+
+//Routes for Excel Exporting
+Route::get('service/export','ServiceController@export');
+Route::get('purchases/export','PurchasesController@export');
+Route::get('sales/export','SalesController@export');

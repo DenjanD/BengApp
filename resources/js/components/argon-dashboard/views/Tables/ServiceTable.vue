@@ -254,7 +254,7 @@
                                             class="btn btn-primary float-right mb-2"><i class="fa fa-plus"></i></button>
                                     </div>
                                 </div>
-                                <!-- Alert after add table data -->
+                                <!-- Alert after add table spart -->
                                 <div v-show="showAlertAddSpart==true"
                                     class="alert alert-success alert-dismissible fade show" role="alert">
                                     <span class="alert-inner--icon"><i class="notification-70"></i></span>
@@ -264,6 +264,17 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
+                                <!-- Alert after delete table spart -->
+                                <div v-show="showAlertDelSpart==true"
+                                    class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="alert-inner--icon"><i class="notification-70"></i></span>
+                                    <span class="alert-inner--text">Spare part telah berhasil dihapus</span>
+                                    <button type="button" @click="showAlertDelSpart = false" class="close"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
                                 <div class="table-responsive description">
                                     <base-table class="table align-items-center table-flush"
                                         :class="type === 'dark' ? 'table-dark': ''"
@@ -273,6 +284,7 @@
                                             <th>No.</th>
                                             <th>Spare Part</th>
                                             <th>Harga</th>
+                                            <th>Hapus</th>
                                         </template>
 
                                         <template slot-scope="{row,index}">
@@ -285,6 +297,7 @@
                                             <td>
                                                 {{ row.price }}
                                             </td>
+                                            <td v-if="index != 0"><button @click="deleteServiceSpart(row.spart_id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>
                                         </template>
                                     </base-table>
                                 </div>
@@ -323,6 +336,16 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
+                                <!-- Alert after delete table sjob -->
+                                <div v-show="showAlertDelSjob==true"
+                                    class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="alert-inner--icon"><i class="notification-70"></i></span>
+                                    <span class="alert-inner--text">Jasa telah berhasil dihapus</span>
+                                    <button type="button" @click="showAlertDelSjob = false" class="close"
+                                        aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                                 <div class="table-responsive description">
                                     <base-table class="table align-items-center table-flush"
                                         :class="type === 'dark' ? 'table-dark': ''"
@@ -332,6 +355,7 @@
                                             <th>No.</th>
                                             <th>Job</th>
                                             <th>Harga</th>
+                                            <th>Hapus</th>
                                         </template>
 
                                         <template slot-scope="{row,index}">
@@ -344,6 +368,7 @@
                                             <td>
                                                 {{ row.price }}
                                             </td>
+                                            <td v-if="index != 0"><button @click="deleteServiceSjob(row.sjob_id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>
                                         </template>
                                     </base-table>
                                 </div>
@@ -392,7 +417,7 @@
                     <b>Jasa Servis</b>
                     <ol>
                         <li v-for="sjobsF in finishSJobs">
-                            {{ sjobsF.sjob }} : Rp {{ sjobsF.price }}
+                            {{ sjobsF.job }} : Rp {{ sjobsF.price }}
                         </li>
                     </ol>
                     <p>Total Biaya Jasa : Rp {{ sjobDetailTotalCost }}</p>
@@ -459,6 +484,8 @@
                 spartDetailTotalCost: 0,
                 showAlertAddSjob: false,
                 showAlertAddSpart: false,
+                showAlertDelSjob: false,
+                showAlertDelSpart: false,
                 finishSJobs: [],
                 finishSpart: [],
                 finishTotalCost: 0,
@@ -656,11 +683,18 @@
                 this.axios.post("api/servicesjob", postData, reqConfig).then(response => {
                     this.sjobDetailTotalCost = 0
                     this.newSjob = '--- Pilih Jasa Baru ---'
+                    var newSjobCost = response.data.newSjobCost
+
                     this.axios.get("api/servicesjob/" + servId, reqConfig).then(response => {
                         this.tableSJobs = response.data
+        
                         for (var i = 0; i < this.tableSJobs.length; i++) {
                             this.sjobDetailTotalCost += this.tableSJobs[i].price
                         }
+
+                        var totcost = document.getElementById("totalCost").innerHTML
+                        var newTot = Number(totcost) + newSjobCost
+                        document.getElementById("totalCost").innerHTML = newTot
                         this.showAlertAddSjob = true
 
                     })
@@ -684,13 +718,19 @@
                 this.axios.post("api/servicespart", postData, reqConfig).then(response => {
                     this.spartDetailTotalCost = 0
                     this.newSpart = '--- Pilih Spare Part Baru ---'
+                    var newSpartCost = response.data.newSpartCost
+
                     this.axios.get("api/servicespart/" + servId, reqConfig).then(response => {
                         this.tableSpart = response.data
+
                         for (var i = 0; i < this.tableSpart.length; i++) {
                             this.spartDetailTotalCost += this.tableSpart[i].price
                         }
-                        this.showAlertAddSpart = true
 
+                        var totcost = document.getElementById("totalCost").innerHTML
+                        var newTot = Number(totcost) + newSpartCost
+                        document.getElementById("totalCost").innerHTML = newTot
+                        this.showAlertAddSpart = true
                     })
                 })
             },
@@ -937,6 +977,56 @@
                 this.editPost3 = {}
                 this.showAlertUpdate = true
             },
+
+            deleteServiceSjob(jobId) {
+                var servId = document.getElementById("sId").innerHTML
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                var postData = {
+                    jobId: jobId,
+                    servId: servId
+                }
+
+                this.axios.post("api/servicesjob/delete", postData, reqConfig).then(response => {
+                    var deletedJobPrice = response.data.jobCost
+
+                    this.axios.get("api/servicesjob/" + servId, reqConfig).then(response => {   
+                        var totcost = document.getElementById("totalCost").innerHTML
+                        var newTotCost = Number(totcost) - deletedJobPrice
+                        document.getElementById("totalCost").innerHTML = newTotCost
+                        this.tableSJobs = response.data                
+                        this.sjobDetailTotalCost -= deletedJobPrice
+                        
+                    })
+                    this.showAlertDelSjob = true
+                })
+            },
+
+            deleteServiceSpart(spartId) {
+                var servId = document.getElementById("sId").innerHTML
+                let reqConfig = {
+                    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+                }
+                var postData = {
+                    spartId: spartId,
+                    servId: servId
+                }
+
+                this.axios.post("api/servicespart/delete", postData, reqConfig).then(response => {
+                    var deletedSpartPrice = response.data.spartCost
+
+                    this.axios.get("api/servicespart/" + servId, reqConfig).then(response => {   
+                        var totcost = document.getElementById("totalCost").innerHTML
+                        var newTotCost = Number(totcost) - deletedSpartPrice
+                        document.getElementById("totalCost").innerHTML = newTotCost
+                        this.tableSpart = response.data                
+                        this.spartDetailTotalCost -= deletedSpartPrice
+                        
+                    })
+                    this.showAlertDelSpart = true
+                })
+            }
 
         },
         computed: {
